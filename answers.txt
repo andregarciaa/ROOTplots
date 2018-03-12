@@ -9,6 +9,12 @@ Q1: What's a script and a module, what is the difference between them?
 [JDC] NOT CORRECT. Check again the definition of module and the difference
                    between them. (Trick: is it intrisically different? maybe 
                    conceptually different?)
+[AGA] "A module is a file containing Python definitions and statements", so it 
+      is the same as a script, there is no internal distinction. Nevertheless, 
+      a module is generally a library, imported by other pieces of code and the 
+      filename is used as the basis for the module name; while a script is 
+      generally a directly executable piece of code, run by itself and the 
+      module is named __main__.
 
 Q2: How can you break a line while you are writing a string variable larger 
 than 80 char.: "somethingverylongblahblahblabh.."?
@@ -44,6 +50,7 @@ a given path using
                      Write the actual code (which I will copy-paste from here to
                      a python interpreter to see the result).
                      You can do it in one line
+[AGA] glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')
 
 Q5: Use a str method to check whether or not the substring "myfriend" is in 
 the string "dontlooseyourmind_my_friend"
@@ -53,6 +60,8 @@ the string "dontlooseyourmind_my_friend"
       "dontlooseyourmind_my_friend".find("myfriend")
       if it returns -1 value, the string does not contain the substring
 [JDC] So, do it explicitely and give me an answer to the Q5
+[AGA] "dontlooseyourmind_my_friend".find("myfriend")
+
 
 Q6: In one line, extract the substring 'croack' from the string 
 "the_frog_is_saying_croak_but_no_one_is_listening". Trick, check the 
@@ -60,7 +69,12 @@ available functions of a python str
     - The substring is saved inside "s":
 s = "the_frog_is_saying_croak_but_no_one_is_listening".partition("saying_")[2].partition("_but")[0]
 [JDC] CORRECT. Q6.1. Do it using a different method of str 
+[AGA] "the_frog_is_saying_croak_but_no_one_is_listening".replace("the_frog_is_saying_","").replace("_but_no_one_is_listening","")
 
 Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
     - Because this is a command line, it uses terminal comands defined in $PATH.
 [JDC] CORRECT.. partially, what does it means "it uses terminal comands defined in $PATH." ?
+[AGA] Terminal comands like "-l" only make sense when executed from the terminal. Environment 
+      variable PATH contains where this binary file is located in order to execute it.
+      Inside a python script you don't have access to PATH, so neither to "root" or "-l"
+      executions.
