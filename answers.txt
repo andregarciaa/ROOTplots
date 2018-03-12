@@ -1,0 +1,52 @@
+ANSWERS OF THE QUESTIONS OF comments.txt
+
+Q1: What's a script and a module, what is the difference between them?
+    - A script is a code capable of being executed.
+    - A module is a part of code with a precise function which works by 
+      itself but when being implemented inside a script in order to be 
+      able to be executed.
+    - Difference: the complexity: modules are functions inside scripts.
+
+Q2: How can you break a line while you are writing a string variable larger 
+than 80 char.: "somethingverylongblahblahblabh.."?
+    - Ending the line with a back slash "\".
+
+Q3: When is it executed that lines? (from "if __name__=='__main__':")
+            a. when you run from bash terminal "python root_plots.py"
+            b. when you run from python interpreter "import root_plots"
+          Why?
+    - This part is only executed when we run from the bash terminal, introducing 
+      "python root_plots.py". When running from the terminal, we are executing the
+      the script as principal program and its variable "__name__" (the name of the 
+      program) gets called "__main__". If the code is being imported, this variable 
+      takes the name of the script and these lines are never executed.
+
+Q4: Show how to check in one line of code how to check if a file exists in 
+a given path using
+            a. glob module
+            b. os.path module
+    - With glob, after "import glob":
+	 glob.glob('FileName')
+      It returns an array with the name of the file if it exists.
+	
+    - With os.path, after doing "import os.path":
+	 os.path.isfile("FileName")    
+      It returns True if the file exists.
+
+
+Q5: Use a str method to check whether or not the substring "myfriend" is in 
+the string "dontlooseyourmind_my_friend"
+    - One way of checking this is the following: 
+      "myfriend" in "dontlooseyourmind_my_friend" 
+    - Using a str method: 
+      "dontlooseyourmind_my_friend".find("myfriend")
+      if it returns -1 value, the string does not contain the substring
+
+Q6: In one line, extract the substring 'croack' from the string 
+"the_frog_is_saying_croak_but_no_one_is_listening". Trick, check the 
+available functions of a python str
+    - The substring is saved inside "s":
+s = "the_frog_is_saying_croak_but_no_one_is_listening".partition("saying_")[2].partition("_but")[0]
+
+Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
+    - Because this is a command line, it uses terminal comands defined in $PATH.
