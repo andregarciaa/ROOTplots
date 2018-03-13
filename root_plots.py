@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # writen in Python, so look for command interpreter in this path
 
-import os, glob
+import os, glob, os.path
 
 """
 Script which creates ROOT plots from a ROOT file. Modified for particular case of
@@ -19,32 +19,38 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 # 1st method (quite simple) from path, check there is a root file in the directory and 
 # saves 2 strings with the sensor type and the run number (useful for plot titles, legends):
 
-read_path():
+read_path(path_with_root_file):
 
-    # list all the "beam_analysis_cluster.root" files inside any folder of the given path:
-    files = glob.glob('/eos/user/d/duarte/alibavas_data_root/**/*beam_analysis_cluster.root', recursive=True)
+    # list all "/eos/.../beam_analysis_cluster.root" file paths inside any folder of the given path:
+    all_files = glob.glob(path_with_root_file+'/**/*beam_analysis_cluster.root', recursive=True)
   
     # if list is empty, raise error:
-    if(files == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
+    if(all_files == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
 
-    read path_with_root_file
-    # example of path_with_root_file: 
-    # /eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000391/
+    # example of path_with_root_file:
+    # /eos/user/d/duarte/alibavas_data_root
+    # inside it, there will be:
+    #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
 
-    # substring of path_with_root_file containing the sensor type (spliting with "/": 7th place)
-    sensor_type = path_with_root_file.split("/")[6]
+    # for each root file path, the sensor type and run number will be saved inside the following lists:
+    sensor_type[], run_number[]
 
-    # substring of path_with_root_file after sensor type, removing "run000" from the begining:
-    run_number = path_with_root_file.split("/")[7].replace("run000","")
+    # check each root file path and add the information to the two lists:
+    for file in all_files:
+        # substring of path_with_root_file containing the sensor type (spliting with "/": 7th place)
+        sensor_types.append(file.split("/")[6])
 
-    return sensor_type, run_number
+        # substring of path_with_root_file after sensor type, removing "run000" from the begining:
+        run_numbers.append(file.split("/")[7].replace("run000",""))
+
+    return sensor_types, run_numbers
 
 #----------------------------------------------------------------------------
 
 # 2nd method look for the branch name given by user, checking "alibava_clusters" tree inside ROOT file:
 
-plot_branch(path_with_root_file, branch_to_plot, sensor_type, run_number):
+plot_branch(path_with_root_file, branch_to_plot, sensor_types, run_numbers):
 
     # open ROOT loading the ROOT file:
     root -l path_with_root_file
@@ -75,8 +81,8 @@ if __name__=='__main__':
     
     # read method outputs are the strings with the sensor name and run number:
     output: two strings
-    sensor_type, run_number = read_path(path_with_root_file)
+    sensor_types, run_numbers = read_path(path_with_root_file)
 
     # plot method opens the alibava_cluster tree and plots the required branch from it:
     # output: plot
-    plot_branch(path_with_root_file, branch_to_plot, sensor_type, run_number)
+    plot_branch(path_with_root_file, branch_to_plot, sensor_types, run_numbers)
