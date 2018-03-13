@@ -13,17 +13,11 @@ from os import listdir
 
 read_path():
 
-    # list path content in a list:
-    path_content = listdir(path_with_root_file) 
-
-    # if no elements in the list contain "beam_analysis_cluster" in the name, the root file is not in 
-    # the given directory
-    check = 0 
-
-    for thing in path_content:
-        if("beam_analysis_cluster" in thing == "TRUE"): check=1 
-
-    if(check == 0): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file\033[1;m")
+    # list all the "beam_analysis_cluster.root" files inside any folder of the given path:
+    files = glob.glob('/eos/user/d/duarte/alibavas_data_root/**/*beam_analysis_cluster.root', recursive=True)
+  
+    # if list is empty... raise error:
+    if(files == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
 
     read path_with_root_file
     # example of path_with_root_file: 
