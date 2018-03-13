@@ -70,6 +70,7 @@ the string "dontlooseyourmind_my_friend"
 [JDC] Missing answer yet
 [AGA] "dontlooseyourmind_my_friend".find("myfriend") returns -1 due to "myfriend" is not
       inside the string "dontlooseyourmind_my_friend"
+[JDC] CORRECT --> DONE
 
 
 Q6: In one line, extract the substring 'croack' from the string 
@@ -98,6 +99,10 @@ Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
 [AGA] Because using terminal comands is equivalent to execute special scripts (eg. "pwd" is
       the same as doing "echo $PWD"), but inside the script they don't have this meaning, 
       we are not even defining them.
+[JDC] No. Please answer:
+      1. What is "-l" (in "root -l path_with_root_file" as it is not a command? 
+      2. Why is not correct to put "root -l path_with_root_file" inside a python script?
+         (Trick: launch the line and see what the interpreter tells you)
 
 
 Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or standard library module 
@@ -107,4 +112,5 @@ Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or sta
     of alibavas_data_root.
 [AGA] Changed in Python 3.5: Support for recursive globs using "**":
 glob.glob('/eos/user/d/duarte/alibavas_data_root/**/*beam_analysis_cluster.root', recursive=True)
+[JDC] CORRECT if our version is 3.5. Now, answer the question for a python2.7 
 
