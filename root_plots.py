@@ -68,7 +68,7 @@ def process(all_files, branch_to_plot, sensor_types, run_numbers):
 
         # Plot the branch (like: cluster_calibrate_charge) applying the time window, 
         # with required limits, colors, titles, etc:
-        alibava_clusters.Draw(branch_to_plot, min_time<event_time && event_time<max_time, \
+        alibava_clusters.Draw(branch_to_plot, "min_time<event_time && event_time<max_time",\
 				nentries, firstentry = 101)
         Landau-Gauss fit
         Obtain fit values and add to legend
@@ -101,7 +101,7 @@ if __name__=='__main__':
 
     # plot method saves a pdf with all the canvas of the calibrated charge distributions and a 
     # dictionary containing sensor name, run number and MPV obtained. In order to do it, it opens 
-    # tge alibava_cluster tree and looks for the required branch from it.
+    # the alibava_cluster tree and looks for the required branch from it.
     # outputs: 
     #    dictionary with the MPV fit values of each run and sensor
     #    pdf with the plots
