@@ -103,6 +103,10 @@ Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
       1. What is "-l" (in "root -l path_with_root_file" as it is not a command? 
       2. Why is not correct to put "root -l path_with_root_file" inside a python script?
          (Trick: launch the line and see what the interpreter tells you)
+[AGA] -l is a flag (option which modifies the behaviour of the command ("root" in this case, 
+      avoiding the show of the ROOT version information))
+      "root -l path_with_root_file" is not correct inside a python script because it launches ROOT, 
+      for making possible execute ROOT commands, which makes no sense inside a script.
 
 
 Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or standard library module 
@@ -112,5 +116,10 @@ Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or sta
     of alibavas_data_root.
 [AGA] Changed in Python 3.5: Support for recursive globs using "**":
 glob.glob('/eos/user/d/duarte/alibavas_data_root/**/*beam_analysis_cluster.root', recursive=True)
-[JDC] CORRECT if our version is 3.5. Now, answer the question for a python2.7 
-
+[JDC] CORRECT if our version is 3.5. Now, answer the question for a python 2.7 
+[AGA] For Python 2.7:
+path = '/eos/user/d/duarte/alibavas_data_root/'
+while(glob.glob(path+'*beam_analysis_cluster.root')==[]):
+    path = path+'*/'
+path = path+'*beam_analysis_cluster.root'
+glob.glob(path)
