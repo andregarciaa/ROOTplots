@@ -107,6 +107,9 @@ Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
       avoiding the show of the ROOT version information))
       "root -l path_with_root_file" is not correct inside a python script because it launches ROOT, 
       for making possible execute ROOT commands, which makes no sense inside a script.
+[JDC] Right, it is a flag. NOT RIGHT the answers why is not correct. It would not launches a ROOT,
+      Use the trick I mentioned before, and try to launch that line in a python interpreter, what
+      is the ouput?
 
 
 Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or standard library module 
@@ -123,3 +126,4 @@ while(glob.glob(path+'*beam_analysis_cluster.root')==[]):
     path = path+'*/'
 path = path+'*beam_analysis_cluster.root'
 glob.glob(path)
+[JDC] CORRECT -> DONE
