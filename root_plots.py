@@ -19,7 +19,7 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 # 1st method (quite simple) from path, check there is a root file in the directory and 
 # saves 2 strings with the sensor type and the run number (useful for plot titles, legends):
 
-read_path(path_with_root_file):
+def read_path(path_with_root_file):
 
     # list all "/eos/.../beam_analysis_cluster.root" file paths inside any folder of the given path:
     all_files = glob.glob(path_with_root_file+'/**/*beam_analysis_cluster.root', recursive=True)
@@ -48,19 +48,31 @@ read_path(path_with_root_file):
 
 #----------------------------------------------------------------------------
 
-# 2nd method look for the branch name given by user, checking "alibava_clusters" tree inside ROOT file:
+# 2nd method look for the branch name given by user, checking "alibava_clusters" tree 
+# inside all the ROOT files:
 
-plot_branch(path_with_root_file, branch_to_plot, sensor_types, run_numbers):
+def check_branch(all_files, branch_to_plot):
+    for element in all_files:
+        # open ROOT loading the ROOT file:
+        root -l element
+        .ls
+        # check there is a tree called alibava_clusters:
+        if yes: continue
+        if not: raise error: root file of element is not right
 
-    # open ROOT loading the ROOT file:
-    root -l path_with_root_file
-    .ls
-    check there is a tree called alibava_clusters
-    # Plot the branch (like: cluster_calibrate_charge) with the nicest limits, colors, titles, etc:
-    alibava_clusters.Draw(branch_to_plot)
-    
-    save to pdf
+#----------------------------------------------------------------------------
 
+# 3rd method creates a pdf with all the canvas:
+
+def plot(all_files, sensor_types, run_numbers):
+    for element in all_files, run_numbers, sensor_types:
+        # Plot the branch (like: cluster_calibrate_charge) with the nicest limits, colors, titles, etc:
+        alibava_clusters.Draw(branch_to_plot)
+        Landau-Gauss fit
+        Obtain fit values and add to legend
+        add to pdf
+
+#----------------------------------------------------------------------------
 
 # Main method:
 if __name__=='__main__':
@@ -79,10 +91,14 @@ if __name__=='__main__':
     args = parser
     path_with_root_file
     
-    # read method outputs are the strings with the sensor name and run number:
-    output: two strings
-    sensor_types, run_numbers = read_path(path_with_root_file)
+    # read method obtains sensor name and run number strings and root file paths list:
+    # output: two strings and one list
+    sensor_types, run_numbers, all_files = read_path(path_with_root_file)
 
-    # plot method opens the alibava_cluster tree and plots the required branch from it:
+    # check_branch method opens the alibava_cluster tree and looks for the required branch from it:
+    # output: nothing if everything is correct
+    check_branch(all_files, branch_to_plot)
+
+    # plot method saves a pdf with all the canvas of the calibrated charge distribution:
     # output: plot
-    plot_branch(path_with_root_file, branch_to_plot, sensor_types, run_numbers)
+    plot(all_files, sensor_types, run_numbers)
