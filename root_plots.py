@@ -60,7 +60,7 @@ def process(all_files, branch_to_plot, sensor_types, run_numbers):
         .ls
         # check there is a tree called alibava_clusters:
         if yes: continue
-        if not: raise error: root file of element is not right
+        if not: Print("ERROR: root file of ", element," is not right")
 
 	# open charge vs time and find time window
         min_time
