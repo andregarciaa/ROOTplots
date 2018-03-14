@@ -1,68 +1,70 @@
-#L1-3:   Don't put any comment BEFORE the SHEBANG!! Otherwise you could face
-         problems when loading or running it. ALWAYS SHEBANG at first line.
-
-#        Comments come after, in a python script or module (Q1: what's a 
-         script and a module, what is the difference between them?), the usual
-         structure is to put there a docstring with a short description of 
-         the program, who did it, etc. You should read this answer 
-         https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-python-files
-         and if you have time, read this, old but still valid, guide: 
-         https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-python-files
-
-#        Get used to break your lines at about 79 columns. This is not an 
-         strict rule to follow, but improves a lot readability. But always 
-         avoid very long lines without break them. (Q2: How can you break 
-         a line while you are writing a string variable larger than 80 char.: 
-         "somethingverylongblahblahblabh.."?)
-
-#        If you write down the goals of the program, you will identify clearest
-         how to write the program code.
-
-#L50-72: (Q3: when is it executed that lines? 
-            a. when you run from bash terminal "python root_plots.py"
-            b. when you run from python interpreter "import root_plots"
-          Why? )
-         
-#L12-33: read_path function
-         Take a look at the module "glob", or the module "os.path", with one 
-         of them you can use check if the file exists at the given path just
-         with one line (Q4: Show how to check in one line of code how to check
-         if a file exists in a given path using 
-                                                a. glob module
-                                                b. os.path module)
-         L20-21: Very complicated, non-optimal way of checking if exist an 
-         element in a string, CHECK the available str functions (Q5: Use a
-         str method to check whether or not the substring "myfriend" is in 
-         the string "dontlooseyourmind_my_friend")
-
-         L23: GOOD; as far as you can, always control errors and provide error 
-         messages
-
-         L28,L30: That's not enterely right, if you use the whole substring 
-         after, you will have the info you are looking at, but more garbage.
-         (Q6: In one line, extract the substring 'croack' from the string 
-         "the_frog_is_saying_croak_but_no_one_is_listening". Trick, check the
-         available functions of a python str)
+General comment: ALWAYS put a docstring (https://www.python.org/dev/peps/pep-0257/)
+                 whenever you define a function. The  main idea is to keep
+                 a simple description of what function does, the input
+                 arguments the function needs, and what it returns (if any)
+                 Q0. Define what is a docstring.
 
 
-#L38-47  plot_branch
-         You cannot use "root -l path_with_root_file" inside a python script
-         (Q7: Why?)
-         It is missing a lot of code between the check of the tree and the 
-         save to pdf
-         1. You have to obtain the proper time window to cut on
-         2. You have to apply the time window to create the charge distribution
-            plot
-         3. You have to fit a Landau*Gaus to the charge distribution, monitoring
-            the fitting proceed fine
-         4. You have to obtain the relevant parameters from the fit (MPV, gaus 
-         noise)
-         5. You have to evaluate errors
+#L4     : It is better to split in different lines the import statements
+          Take a look to https://www.python.org/dev/peps/pep-0008/
+          within "Imports" section. 
+          Note that PEP-8 is the style guide for coding python, which
+          is a good adviser, not mandatory, of how you should code. 
+          I would recommend you to take note of the link and keep it 
+          with you ...
 
-         This is only for 1 charge plot, but probably will be needed to accumulate
-         statistics for the same sensors, voltages or even a plot MPV vs. voltage..
+#L22    : Function read_path. Create a dictionary to gather the file names
+          and organize them by sensor name and run number. This dictionary
+          will be the returned by the function.
+          Q1. Create a dictionary relating the name of all elementary 
+              particles with its charge (0,-1, or +1)
+              Hint: https://docs.python.org/2.7/tutorial/datastructures.html
+              Under 5.5. Dictionaries
+
+#L55    : Function process.
+          Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
+
+          Q3. What is the name of the package to use ROOT in python? 
+          Q3.1. If you want to use it, what should you do in your code?
+
+          Q4. How is it instantiated a ROOT file? 
+          Q4.1. What is the difference of an instance and a class?
+
+          Q5. How is it retrieved an existing object inside a ROOT file? 
+          Q51.1. Write down the line needed to extract and instantiate the 
+              TTree "alibava_clusters" from any of the 
+              "*_beam_analysis_cluster.root" files
+          
+          Q6. Check the package https://github.com/duartej/postproc-alibava/
+              and look for a function which can obtain the time window from 
+              a TTree. Write down the lines of code needed to use it, and use it
+              to obtain the time window of: 
+              '/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root'
+              Hint: Check under alibavaSkifftools folder
+                    If you don't have installed the package, you should do it
+          
+          Q7. List the names of the ROOT class that defines histograms, functions
+              and Graphs (in 1Dimension), and instantiate in python code.
+          Q7.1. Identify each case with the right class to use (histogram, function or graph):
+             a. The Landau fitted to a charge distribution
+             b. The intensity (I) measured in a circuit given a voltage (v). Perform the measurement
+                20 times using different 20-voltages.
+             c. The charge of reconstructed clusters in a depleted semiconductor 
+                sensor, which was iluminated by MIPs in a test-beam
+          
+          Q8. Obtain the calibrated charge distribution from the sensor N1-3_0_b1, 
+              run 393 applying the proper time window cut and a common mode cut 
+              (no more than 20 ADC). Write down the lines of code needed to obtain the plot
+              in a python interpreter.
+          Q8.1. Fit the obtained distribution to a Landau*Gaus function. Write down 
+              the python code.
+              (You can use the Landau-gaus function placed in the 
+              postproc-alibava package, check in the alibavaSkifftools.analysis_function 
+              module, the landau_gaus function and use it to build a TF1 function)
+              WARNING: DIFFICULT PROBLEM
+          Q8.2. Obtain the parameters of the fitted function and print out their 
+              values, write down the python code
 
 
 
-
-
+ 
