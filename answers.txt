@@ -110,6 +110,16 @@ Q7: You cannot use "root -l path_with_root_file" inside a python script. Why?
 [JDC] Right, it is a flag. NOT RIGHT the answers why is not correct. It would not launches a ROOT,
       Use the trick I mentioned before, and try to launch that line in a python interpreter, what
       is the ouput?
+[AGA] The line "root -l path_with_root_file", when executed from the terminal, it launches ROOT, 
+      however, when executed in a python interpreter, the result is the following:
+
+  File "<stdin>", line 1
+    root -l path_with_root_file
+                              ^
+SyntaxError: invalid syntax
+
+      and when executed from script the consequence is also an error, due to this changes the 
+      command interpreter in the terminal.
 
 
 Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or standard library module 
