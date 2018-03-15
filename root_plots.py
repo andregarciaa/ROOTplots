@@ -22,10 +22,10 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 def read_path(path_with_root_file):
 
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
-    all_files = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
+    all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
 
     # if list is empty, raise error:
-    if(all_files == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
+    if(all_paths == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
 
     # example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root
@@ -37,14 +37,20 @@ def read_path(path_with_root_file):
     sensor_type[], run_number[]
 
     # check each root file path and add the information to the two lists:
-    for file in all_files:
+    for file in all_paths:
         # substring of path_with_root_file containing the sensor type (spliting with "/": 7th place)
         sensor_types.append(file.split("/")[6])
 
         # substring of path_with_root_file after sensor type, removing "run000" from the begining:
         run_numbers.append(file.split("/")[7].replace("run000",""))
 
-    return all_files, sensor_types, run_numbers
+    # The following lines will create the two dictionaries:
+    path_sensor_dic = {}
+    sensor_run_dic = {}
+    path_sensor_dic = dict(zip(all_paths, sensor_types))
+    path_sensor_run_dic = dict(zip(path_sensor_dic, run_numbers))
+
+    return path_sensor_run_dic
 
 #----------------------------------------------------------------------------
 
@@ -52,9 +58,9 @@ def read_path(path_with_root_file):
 # inside all the ROOT files. Creates a pdf with all the canvas, doing a Landau-Gauss
 # fit and computing the fit variables. MPVs are stored in a dictionary:
 
-def process(all_files, branch_to_plot, sensor_types, run_numbers):
+def process(all_paths, branch_to_plot, sensor_types, run_numbers):
 
-    for element in all_files, run_numbers, sensor_types:
+    for element in all_paths, run_numbers, sensor_types:
         # open ROOT loading the ROOT file:
         root -l element
         .ls
@@ -96,8 +102,8 @@ if __name__=='__main__':
     path_with_root_file
     
     # read method obtains sensor name and run number strings and root file paths list:
-    # output: two strings and one list
-    sensor_types, run_numbers, all_files = read_path(path_with_root_file)
+    # output: one dictionary
+    path_sensor_run_dic = read_path(path_with_root_file)
 
     # plot method saves a pdf with all the canvas of the calibrated charge distributions and a 
     # dictionary containing sensor name, run number and MPV obtained. In order to do it, it opens 
@@ -105,4 +111,4 @@ if __name__=='__main__':
     # outputs: 
     #    dictionary with the MPV fit values of each run and sensor
     #    pdf with the plots
-    mpv_values = process(branch_to_plot, all_files, sensor_types, run_numbers)
+    mpv_values = process(branch_to_plot, paths_sensor_run_dic)
