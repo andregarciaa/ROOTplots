@@ -120,6 +120,7 @@ SyntaxError: invalid syntax
 
       and when executed from script the consequence is also an error, due to this changes the 
       command interpreter in the terminal.
+[JDC] Right, therefore "root -l path_with_root_file" is NOT PYTHON SYNTAX. --> DONE
 
 
 Q8: Generic example of Q4.1: Use either 'glob', 'os' or 'os.path' methods or standard library module 
