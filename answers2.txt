@@ -1,0 +1,87 @@
+Q0. Define what is a docstring.
+    First statement of the code, it a comment written in source code, it 
+    allows reading the comments during the execution.
+
+
+Q1. Create a dictionary relating the name of all elementary
+              particles with its charge (0,-1, or +1)
+              Hint: https://docs.python.org/2.7/tutorial/datastructures.html
+              Under 5.5. Dictionaries
+Directly add keys with their respective values to the dictionary:
+elementary_particles={'gluon':0, 'photon'=0, 'neutrino'=0}
+
+Add extra values at the end of the dictionary:
+elementary_particles['electron']=-1
+elementary_particles['higgs']=0
+
+
+Function process:
+
+Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
+    It is a way of structuring Python’s module namespace by using “dotted module names”.
+    If "cartera" is a module of "persona", the way of accessing to it would be like the following:
+    persona.cartera
+
+
+Q3. What is the name of the package to use ROOT in python?
+    PyROOT
+
+
+Q3.1. If you want to use it, what should you do in your code?
+    import ROOT
+
+
+Q4. How is it instantiated a ROOT file?
+    TFile *MyFile = new TFile("Event.root","NEW");
+
+
+Q4.1. What is the difference of an instance and a class?
+      A class is an abstract entity, generic, while an instance or 
+      object is a particular example of a class, with given values
+      of its variables.
+      Example:
+      Class = Person
+      Object = Juan
+
+
+Q5. How is it retrieved an existing object inside a ROOT file?
+    Using the TFile::Get() method
+
+
+Q51.1. Write down the line needed to extract and instantiate the
+              TTree "alibava_clusters" from any of the
+              "*_beam_analysis_cluster.root" files
+
+"*_beam_analysis_cluster.root".Get("alibava_clusters")
+
+
+Q6. Check the package https://github.com/duartej/postproc-alibava/
+    and look for a function which can obtain the time window from
+    a TTree. Write down the lines of code needed to use it, and use it
+    to obtain the time window of:
+    '/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva$
+    Hint: Check under alibavaSkifftools folder
+    If you don't have installed the package, you should do it
+
+Q7. List the names of the ROOT class that defines histograms, functions
+              and Graphs (in 1Dimension), and instantiate in python code.
+Q7.1. Identify each case with the right class to use (histogram, function or graph):
+             a. The Landau fitted to a charge distribution
+             b. The intensity (I) measured in a circuit given a voltage (v). Perform the measurement
+                20 times using different 20-voltages.
+             c. The charge of reconstructed clusters in a depleted semiconductor
+                sensor, which was iluminated by MIPs in a test-beam
+
+Q8. Obtain the calibrated charge distribution from the sensor N1-3_0_b1,
+              run 393 applying the proper time window cut and a common mode cut
+              (no more than 20 ADC). Write down the lines of code needed to obtain the plot
+              in a python interpreter.
+Q8.1. Fit the obtained distribution to a Landau*Gaus function. Write down
+              the python code.
+              (You can use the Landau-gaus function placed in the
+              postproc-alibava package, check in the alibavaSkifftools.analysis_function
+              module, the landau_gaus function and use it to build a TF1 function)
+              WARNING: DIFFICULT PROBLEM
+Q8.2. Obtain the parameters of the fitted function and print out their
+              values, write down the python code
+
