@@ -1,42 +1,60 @@
 Q0. Define what is a docstring.
-    First statement of the code, it a comment written in source code, it 
-    allows reading the comments during the execution.
+    - First statement of a module, function, class or method DEFINITION, 
+    which documents the code, giving information about what it is doing,  
+    which inputs requires, what it will return, etc.
+    For a given "functionName", writing "print functionName.__doc__" is 
+    possible to see the docstring on screen during execution time.
 
 
-Q1. Create a dictionary relating the name of all elementary
-              particles with its charge (0,-1, or +1)
-              Hint: https://docs.python.org/2.7/tutorial/datastructures.html
-              Under 5.5. Dictionaries
-Directly add keys with their respective values to the dictionary:
-elementary_particles={'gluon':0, 'photon'=0, 'neutrino'=0}
+Q1. Create a dictionary relating the name of all elementary particles 
+with its charge (0,-1, or +1). Hint (Under 5.5. Dictionaries): 
+https://docs.python.org/2.7/tutorial/datastructures.html
+    - Creation and directly addition of keys with their respective values 
+     to the dictionary:
+elementary_particles={'gluon':0, 'photon':0, 'neutrino':0, 'electron neutrino':0,\
+'muon':-1, 'muon neutrino':0, 'tau':-1, 'tau neutrino':0,}
 
-Add extra values at the end of the dictionary:
+    - Addition of extra values at the end of the dictionary:
 elementary_particles['electron']=-1
 elementary_particles['higgs']=0
+elementary_particles['W boson']=-1
+elementary_particles['Z boson']=0
+elementary_particles['graviton']=0
 
+    - Note that the order in which you add keys and values to a dictionary
+      is not necessary the same as the order in which they are located. 
+      Nevertheless, this is not important due to the fact that you access
+      values through the name of the keys, not through the positions of 
+      the data inside the dictionary (this is the main difference between
+      arrays and dictionaries).
 
-Function process:
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
-    It is a way of structuring Python’s module namespace by using “dotted module names”.
-    If "cartera" is a module of "persona", the way of accessing to it would be like the following:
+    - It is a group of modules. It is a way of structuring Python’s module 
+    namespace by using “dotted module names”. 
+    If "cartera" and "reloj" are modules inside a big module called "persona", 
+    the way of accessing them would be like:
     persona.cartera
+    persona.reloj
 
 
 Q3. What is the name of the package to use ROOT in python?
-    PyROOT
+    - The ROOT package in Python is called: ROOT
 
 
 Q3.1. If you want to use it, what should you do in your code?
-    import ROOT
+      - In order to use it, write at the begining of the scrip:
+      import ROOT
 
 
 Q4. How is it instantiated a ROOT file?
-    TFile *MyFile = new TFile("Event.root","NEW");
+    - In C++:
+    TFile *MyFile = new TFile("Event.root","NEW");     
+    - In Python:						       
 
 
-Q4.1. What is the difference of an instance and a class?
-      A class is an abstract entity, generic, while an instance or 
+Q4.1. What is the difference between an instance and a class?
+      - A class is an abstract entity, generic, while an instance or 
       object is a particular example of a class, with given values
       of its variables.
       Example:
@@ -45,23 +63,22 @@ Q4.1. What is the difference of an instance and a class?
 
 
 Q5. How is it retrieved an existing object inside a ROOT file?
-    Using the TFile::Get() method
+    - Using the TFile::Get() method
 
 
-Q51.1. Write down the line needed to extract and instantiate the
-              TTree "alibava_clusters" from any of the
-              "*_beam_analysis_cluster.root" files
-
+Q51.1. Write down the line needed to extract and instantiate the TTree
+"alibava_clusters" from any of the "*_beam_analysis_cluster.root" files
+       - Answer:
 "*_beam_analysis_cluster.root".Get("alibava_clusters")
 
 
-Q6. Check the package https://github.com/duartej/postproc-alibava/
-    and look for a function which can obtain the time window from
-    a TTree. Write down the lines of code needed to use it, and use it
-    to obtain the time window of:
-    '/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva$
-    Hint: Check under alibavaSkifftools folder
-    If you don't have installed the package, you should do it
+Q6. Check the package https://github.com/duartej/postproc-alibava/ and look 
+for a function which can obtain the time window from a TTree. Write down the 
+lines of code needed to use it, and use it to obtain the time window of:
+'/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva$
+Hint: Check under alibavaSkifftools folder. If you don't have installed the 
+package, you should do it
+    - 
 
 Q7. List the names of the ROOT class that defines histograms, functions
               and Graphs (in 1Dimension), and instantiate in python code.
