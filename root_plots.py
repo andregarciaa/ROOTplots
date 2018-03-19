@@ -33,22 +33,33 @@ def read_path(path_with_root_file):
     #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
 
-    # for each root file path, the sensor type and run number will be saved inside the following lists:
-    sensor_type[], run_number[]
+    # for each root file path, the sensor type  will be saved in a variable overwriten in each 
+    # iteration, but the run number will be saved in an array, overwritten when changing the 
+    # type of sensor:
+    run_numbers = []
 
-    # check each root file path and add the information to the two lists:
+    # check each root file path and write the new information in the variables:
     for file in all_paths:
+        # If during the path reading we change to the following type of sensor, this means all the 
+        # runs of a sensor have been read, so they can be saved inside the key "sensor_type" inside 
+        # the dictionary "path_sensor_run_dic":
+        if(sensor_type != file.split("/")[6] && sensor_type != ""):
+            # Initialise again "run_numbers" list:
+            run_numbers = []
+           
+            # The value of the path_sensor_run_dic dictionary for each sensor_type is all the runs
+            saved until this moment for that sensor_type:
+            path_sensor_run_dic = dict(sensor_type:run_path_dic[run_number])
+
         # substring of path_with_root_file containing the sensor type (spliting with "/": 7th place)
-        sensor_types.append(file.split("/")[6])
+        sensor_type = file.split("/")[6]
 
         # substring of path_with_root_file after sensor type, removing "run000" from the begining:
-        run_numbers.append(file.split("/")[7].replace("run000",""))
+        run_numbers = append(file.split("/")[7].replace("run000",""))
 
-    # The following lines will create the two dictionaries:
-    path_sensor_dic = {}
-    sensor_run_dic = {}
-    path_sensor_dic = dict(zip(all_paths, sensor_types))
-    path_sensor_run_dic = dict(zip(path_sensor_dic, run_numbers))
+        # The following lines will add values to two dictionaries (one inside the other):
+        # The first one relates run number with the path where it is located:
+        run_path_dic = dict(run_number:file)
 
     return path_sensor_run_dic
 
