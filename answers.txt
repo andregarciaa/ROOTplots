@@ -104,6 +104,13 @@ Q51.1. Write down the line needed to extract and instantiate the TTree
        "*_beam_analysis_cluster.root".Get("alibava_clusters")
 [JDC] You are using the method Get of a str object ("*_beam_analysis_cluster.root")
       which does not have a Get method
+[AGA] We cannot take a string and get from it an object, we need first to 
+      open the root file, which has that string as name, and save it in a 
+      variable:
+import ROOT
+file = ROOT.TFile("393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132\
+      _beam_analysis_cluster.root")
+file.Get("alibava_clusters")
 
 
 Q6. Check the package https://github.com/duartej/postproc-alibava/ and look
