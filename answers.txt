@@ -73,6 +73,7 @@ Q4.1. What is the difference between an instance and a class?
       Example:
       Class = Person
       Object = Juan
+[JDC] DONE
 
 
 Q5. How is it retrieved (recuperar) an existing object inside a ROOT file?
@@ -109,6 +110,10 @@ package, you should do it
 Q7. List the names of the ROOT class that defines histograms, functions
 and Graphs (in 1Dimension), and instantiate in python code.
     - TH1, TGraph, Draw(), TCanvas()
+[JDC] There is errors: TH1 and TGraph are the virtual classes for histograms
+      and graphs (what is a virtual class?), but Draw() is a METHOD not a class,
+      and TCanvas is nothing to do with histograms, functions nor graphs (what is
+      a TCanvas class?)
 
 
 Q7.1. Identify each case with the right class to use (histogram, function or graph):
@@ -120,7 +125,7 @@ Q7.1. Identify each case with the right class to use (histogram, function or gra
    c. The charge of reconstructed clusters in a depleted semiconductor
    sensor, which was iluminated by MIPs in a test-beam.
       - Histogram
-
+[JDC] RIGHT, done
 
 Q8. Obtain the calibrated charge distribution from the sensor N1-3_0_b1, run 393
 applying the proper time window cut and a common mode cut (no more than 20 ADC).
