@@ -49,6 +49,11 @@ def read_path():
 
         # obtain the name of the sensor for each rootfile in the directory:
         sensor_name = rootfile.split("/")[6]
+        
+        # In the directory there are also data from iLGAD, LGAD and REF, ignore:
+        if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
+        "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"): 
+            continue
 
         # If the information of the current kind of sensor hasn't been collected yet, create 
         # its own dictionary inside a new key of the big one:
