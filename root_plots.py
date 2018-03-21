@@ -24,8 +24,9 @@ def read_path():
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
     all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
 
-    # if list is empty, raise error:
-    if(all_paths == []): raise IOError("\033[1;35mThe given directory does not contain the necessary ROOT file/s\033[1;m")
+    # Due to last line is hardcoded, if list is empty, raise the following error:
+    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access to the \
+    /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
 
     # example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root
@@ -33,37 +34,31 @@ def read_path():
     #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
 
-    # for each root file path, the sensor type  will be saved in a variable overwriten in each 
-    # iteration, but the run number will be saved in an array, overwritten when changing the 
-    # type of sensor:
-    run_numbers = []
+    # Instantiate the big dictionary:
+    sensor_run_path_dic = {}
 
-    # check each root file path and write the new information in the variables:
-    for file in all_paths:
-        # If during the path reading we change to the following type of sensor, this means all the 
-        # runs of a sensor have been read, so they can be saved inside the key "sensor_type" inside 
-        # the dictionary "path_sensor_run_dic":
-        if(sensor_type != file.split("/")[6] and sensor_type != ""):
-            # Initialise again "run_numbers" list:
-            run_numbers = []
-           
-            # The value of the path_sensor_run_dic dictionary for each sensor_type is all the runs
-            saved until this moment for that sensor_type:
-            path_sensor_run_dic = dict(sensor_type:run_path_dic[run_number])
+    # Check each root file path and write the new information in the variables:
+    for rootfile in all_paths:
 
-        # substring of path_with_root_file containing the sensor type (spliting with "/": 7th place)
-        sensor_type = file.split("/")[6]
+        # obtain the name of the sensor for each rootfile in the directory:
+        sensor_name = rootfile.split("/")[6]
 
-        # substring of path_with_root_file after sensor type, removing "run000" from the begining:
-        run_numbers = append(file.split("/")[7].replace("run000",""))
+        # If the information of the current kind of sensor hasn't been collected yet, create 
+        # its own dictionary inside a new key of the big one:
+        if not sensor_run_path_dic.has_key(sensor_name):
+            # Instantiate a dictionary for each sensor:
+            sensor_run_path_dic[sensor_name] = {}
 
-        # The following lines will add values to two dictionaries (one inside the other):
-        # The first one relates run number with the path where it is located:
-        run_path_dic = dict(run_number:file)
+        # get the run number from the path of each root file:
+        run_number = file.split("/")[7].replace("run000","")
+
+        # Save the path of the root file for each sensor and run number:
+        sensor_run_path_dic[sensor_name][run_number] = rootfile
 
     return path_sensor_run_dic
 
 #----------------------------------------------------------------------------
+"""
 
 # 2nd method looks for the branch name given by user, checking "alibava_clusters" tree 
 # inside all the ROOT files. Creates a pdf with all the canvas, doing a Landau-Gauss
@@ -93,6 +88,8 @@ def process(all_paths, branch_to_plot, sensor_types, run_numbers):
 
     return mpv_values
 
+
+"""
 #----------------------------------------------------------------------------
 
 # Main method:
