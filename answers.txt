@@ -98,7 +98,7 @@ Q5. How is it retrieved (recuperar) an existing object inside a ROOT file?
       input is a string (the object we want to take from the ROOT file).
 
 
-Q51.1. Write down the line needed to extract and instantiate the TTree
+Q5.1. Write down the line needed to extract and instantiate the TTree
 "alibava_clusters" from any of the "*_beam_analysis_cluster.root" files
        - Generic answer (write the complete name for a particular case):
        "*_beam_analysis_cluster.root".Get("alibava_clusters")
