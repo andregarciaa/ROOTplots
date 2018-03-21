@@ -18,8 +18,13 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 
 #----------------------------------------------------------------------------
 
-# 1st method (quite simple) from path, check there is a root file in the directory and 
-# saves 2 strings with the sensor type and the run number (useful for plot titles, legends):
+"""
+Method read_path() checks the path where the root files are stored and saves them all 
+(including their full paths) in a list. Then, it goes down this list saving in a 
+dictionary the sensors names related with all the runs of each one and the full path.
+Input: nothing
+Returns: dictionary relating sensor_name--run_number--full_path
+"""
 
 def read_path():
 
