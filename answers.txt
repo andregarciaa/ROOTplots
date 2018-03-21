@@ -4,6 +4,9 @@ Q0. Define what is a docstring.
     which inputs requires, what it will return, etc.
     For a given "functionName", writing "print functionName.__doc__" is
     possible to see the docstring on screen during execution time.
+[JDC] RIGHT. So, it is very important to USE IT. A good documentation
+      is going to save you (or the you of the future) a lot of headaches
+      --> DONE
 
 
 Q1. Create a dictionary relating the name of all elementary particles
@@ -27,6 +30,10 @@ elementary_particles['graviton']=0
       values through the name of the keys, not through the positions of
       the data inside the dictionary (this is the main difference between
       arrays and dictionaries).
+[JDC] RIGHT. Perfect. Now let me complicate a bit, 
+Q1.1. Create a dictionary (or many) to allow you to obtain a charge of a particle
+      by the kind of elementary particle (lepton or boson) and its name
+      Right now you accessing only by its name.
 
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
@@ -36,16 +43,19 @@ Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html
     the way of accessing them would be like:
     persona.cartera
     persona.reloj
+[JDC]  DONE
 
 
 Q3. What is the name of the package to use ROOT in python?
     - The ROOT package in Python is called: ROOT
+[JDC] DONE
 
 
 Q3.1. If you want to use it, what should you do in your code?
       - In order to use it, write at the begining of the script or
       before the first line where the Pyhton package is used:
       import ROOT
+[JDC] DONE
 
 
 Q4. How is it instantiated a ROOT file?
@@ -53,6 +63,7 @@ Q4. How is it instantiated a ROOT file?
     TFile *MyFile = new TFile("File.root","NEW");
     - In Python:
     myfile = ROOT.TFile("file.root")
+[JDC] DONE
 
 
 Q4.1. What is the difference between an instance and a class?
@@ -66,12 +77,16 @@ Q4.1. What is the difference between an instance and a class?
 
 Q5. How is it retrieved (recuperar) an existing object inside a ROOT file?
     - Using the Get() method
+[JDC] Actually it is not totally correct, (trick: check the signature of 
+     the method)
 
 
 Q51.1. Write down the line needed to extract and instantiate the TTree
 "alibava_clusters" from any of the "*_beam_analysis_cluster.root" files
        - Generic answer (write the complete name for a particular case):
        "*_beam_analysis_cluster.root".Get("alibava_clusters")
+[JDC] You are using the method Get of a str object ("*_beam_analysis_cluster.root")
+      which does not have a Get method
 
 
 Q6. Check the package https://github.com/duartej/postproc-alibava/ and look
@@ -84,95 +99,12 @@ package, you should do it
     - From alibavaSkifftools/python/analysis_functions.py script, the lines
       71-152 calculate the time window through the get_time_window() method:
 
-def get_time_window(tree,cut,\
-        win_halfsize=2.0,\
-        fog_brname="cluster_charge",time_brname="eventTime",
-        fog_min=0,fog_max=500):
-    """Get the time window by obtaining the maximum of the
-    time profile
-
-    Parameters
-    ----------
-    tree: ROOT.TTree
-    cut: str
-        The cut string to be applied to the selection
-    win_halfsize: float, default: 2.0
-        The (half) size of the window around the maximum
-    fog_brname: str, optional
-        The name of the branch will act as figure of merit
-        to extract their maximum (values are averaged vs. x)
-    time_brname: str, optional
-        The name of the branch will act as x-coordinate
-    fog_min: float
-        The min value for the fog in the fit
-    fog_max: float
-        The max value for the fog in the fit
-    """
-    import ROOT
-    ROOT.gROOT.SetBatch()
-
-    c = ROOT.TCanvas()
-    # Check the branches exist
-    for brname in [ fog_brname, time_brname ]:
-        if brname not in map(lambda x: x.GetName(),tree.GetListOfBranches()):
-            raise AttributeError("get_time_window: no branch '{0}' "\
-                    "found in the input tree".format(brname))
-    # First get the eta-distribution
-    tree.Draw("{0}:{1}>>_test(30,-0.5,29.5,100,{2},{3})".format(\
-            fog_brname,time_brname,fog_min,fog_max),"{0}".format(cut))
-    _h2 = ROOT.gDirectory.Get("_test")
-    if type(_h2) == ROOT.TObject:
-        raise AttributeError("Histogram generation failed. Probably"\
-                " due to some unexisting branch name introduced in the"\
-                " cut definition: '{0}'".format(cut))
-    _h2.SetDirectory(0)
-    prof_window = _h2.ProfileX()
-    # Fit a polynomial
-    t0=3.0
-    t1=30.0
-    pol_func = ROOT.TF1("pol_func","pol4",t0,t1)
-    status = prof_window.Fit(pol_func,"QS")
-    if status.Status() != 0:
-        print "[analysis_functions.get_time_window] WARNING : Fit failed"
-        ROOT.gROOT.SetBatch(0)
-        c.Close()
-        return (-1,-1)
-    # Find the maximum and define time window as +- 2 ns.
-    # To find the maximum df/dt ~= 0
-    N = 200
-    Dx = (t1-t0)/float(N)
-    tmax=0.0
-    found_max=False
-    last_derivate = pol_func.Derivative(t0)
-    for i in xrange(1,N):
-        t = t0+i*Dx
-        # Change of sign?
-        current_derivate =  pol_func.Derivative(t)
-        if(current_derivate*last_derivate < 0.0):
-            # Get the medium
-            tmax = t-Dx/2.0
-            found_max = True
-            break
-        last_derivate = current_derivate
-    # If did not find the maximum, means is monotically
-    # creasing or decreasing, take the absolute maximum
-    if not found_max:
-        # Creasing case
-        if pol_func(t0) < pol_func(t1):
-            tmax = t1-win_halfsize
-        # Decreasing case
-        else:
-            tmax = t0
-    ROOT.gROOT.SetBatch(0)
-    c.Close()
-    return (tmax-win_halfsize,tmax+win_halfsize)
-
-
-
-    - Obtain the time window of:
-'/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
-393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root'
-
+[JDC] Erased innecesary lines. You copied-paste here the implementation of the
+      get_time_window method, but what I'm asking is the lines of code you need
+      to calculate the time window USING the get_time_window, so you have to 
+      use it. To use a method, class, package that somebody else wrote, you 
+      don't need to know exactly the implementations, but the INTERFACE methods,
+      that's it WHAT they can do for you and HOW you can use them
 
 Q7. List the names of the ROOT class that defines histograms, functions
 and Graphs (in 1Dimension), and instantiate in python code.
