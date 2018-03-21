@@ -93,6 +93,9 @@ Q5. How is it retrieved (recuperar) an existing object inside a ROOT file?
     - Using the Get() method
 [JDC] Actually it is not totally correct, (trick: check the signature of 
      the method)
+[AGA] The Get() method is overloaded, there are several different signatures
+      using this name. In this case, we need the Get(str) method, whose 
+      input is a string (the object we want to take from the ROOT file).
 
 
 Q51.1. Write down the line needed to extract and instantiate the TTree
