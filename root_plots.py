@@ -19,7 +19,7 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 # 1st method (quite simple) from path, check there is a root file in the directory and 
 # saves 2 strings with the sensor type and the run number (useful for plot titles, legends):
 
-def read_path(path_with_root_file):
+def read_path():
 
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
     all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
@@ -43,7 +43,7 @@ def read_path(path_with_root_file):
         # If during the path reading we change to the following type of sensor, this means all the 
         # runs of a sensor have been read, so they can be saved inside the key "sensor_type" inside 
         # the dictionary "path_sensor_run_dic":
-        if(sensor_type != file.split("/")[6] && sensor_type != ""):
+        if(sensor_type != file.split("/")[6] and sensor_type != ""):
             # Initialise again "run_numbers" list:
             run_numbers = []
            
@@ -114,7 +114,7 @@ if __name__=='__main__':
     
     # read method obtains sensor name and run number strings and root file paths list:
     # output: one dictionary
-    path_sensor_run_dic = read_path(path_with_root_file)
+    path_sensor_run_dic = read_path()
 
     # plot method saves a pdf with all the canvas of the calibrated charge distributions and a 
     # dictionary containing sensor name, run number and MPV obtained. In order to do it, it opens 
