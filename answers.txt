@@ -84,7 +84,8 @@ package, you should do it
     - From alibavaSkifftools/python/analysis_functions.py script, the lines
       71-152 calculate the time window through the get_time_window() method:
 
-def get_time_window(tree,cut,\
+def get_time_window('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_\
+gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root',,\
         win_halfsize=2.0,\
         fog_brname="cluster_charge",time_brname="eventTime",
         fog_min=0,fog_max=500):
@@ -208,3 +209,11 @@ Q8.2. Obtain the parameters of the fitted function and print out their values, w
 down the python code.
       -
 
+
+Q9. What does the checkout do?
+    - 
+
+
+Q10. What do you have to do when you want to stop having a file in the repository 
+     (which previously was git add)?
+     - 
