@@ -140,3 +140,11 @@ Q8.2. Obtain the parameters of the fitted function and print out their values, w
 down the python code.
       -
 
+
+Q9. What does the checkout do?
+    - 
+
+
+Q10. What do you have to do when you want to stop having a file in the repository 
+     (which previously was git add)?
+     - 
