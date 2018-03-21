@@ -30,10 +30,23 @@ elementary_particles['graviton']=0
       values through the name of the keys, not through the positions of
       the data inside the dictionary (this is the main difference between
       arrays and dictionaries).
-[JDC] RIGHT. Perfect. Now let me complicate a bit, 
+[JDC] RIGHT. Perfect. Now let me complicate a bit: Q1.1
+
+
 Q1.1. Create a dictionary (or many) to allow you to obtain a charge of a particle
-      by the kind of elementary particle (lepton or boson) and its name
-      Right now you accessing only by its name.
+by the kind of elementary particle (lepton or boson) and its name. Right now you 
+are accessing only by its name.
+      - Due to the big dictionary has only two keys, they are defined by hand, when
+        instantiating this dictionary. The value of each key is a dictionary which
+        is also instantiated here. I assume we have in memory the dictionary of Q1:
+
+elementary_particles_2 = {"lepton":{}, "boson":{}}
+for i in elementary_particles:
+    if (i=="electron" or i=="muon" or i=="tau" or i=='electron neutrino' or \
+    i=='muon neutrino' or i=='tau neutrino'):
+        elementary_particles_2["lepton"][i] = elementary_particles[i]
+    else:
+        elementary_particles_2["boson"][i] = elementary_particles[i] 
 
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
