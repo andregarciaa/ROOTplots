@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # writen in Python, so look for command interpreter in this path
 
-import os, glob, os.path
+import os
+import glob
+import os.path
 
 """
 Script which creates ROOT plots from a ROOT file. Modified for particular case of
