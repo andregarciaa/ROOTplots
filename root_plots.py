@@ -71,38 +71,38 @@ def read_path():
     return sensor_run_path_dic
 
 #----------------------------------------------------------------------------
+
+"""
+This method looks for the branch inside the "alibava_clusters" tree for all
+the ROOT files which have been stored in sensor_run_path_dic dictionary. 
+Creates a pdf with all the canvas, doing a Landau-Gauss
+fit and computing the fit variables. MPVs are stored in a dictionary:
+input: sensor_run_path_dic dictionary.
+output: pdf with all the calibrated charge distribution plots and a dictionary
+with all the MPV of the Landau-Gauss fits for those distributions.
+
 """
 
-# 2nd method looks for the branch name given by user, checking "alibava_clusters" tree 
-# inside all the ROOT files. Creates a pdf with all the canvas, doing a Landau-Gauss
-# fit and computing the fit variables. MPVs are stored in a dictionary:
-
 def process(sensor_run_path_dic):
-
-    for element in all_paths, run_numbers, sensor_types:
-        # open ROOT loading the ROOT file:
-        root -l element
-        .ls
-        # check there is a tree called alibava_clusters:
-        if yes: continue
-        if not: Print("ERROR: root file of ", element," is not right")
-
-	# open charge vs time and find time window
-        min_time
-	max_time
-
-        # Plot the branch (like: cluster_calibrate_charge) applying the time window, 
-        # with required limits, colors, titles, etc:
-        alibava_clusters.Draw(branch_to_plot, "min_time<event_time && event_time<max_time",\
-				nentries, firstentry = 101)
-        Landau-Gauss fit
-        Obtain fit values and add to legend
-        add to pdf
+mpv_values = {}
+    for sensor in sensor_run_path_dic:
+        for run in sensor_run_path_dic[sensor]:
+            # Open ROOT file:
+            root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
+            # Get the "alibava_clusters" tree from the ROOT file:
+            root_tree = root_file.Get("alibava_clusters")
+            # Obtain the time window and save in a list of 2 elements:
+            time_window = an.get_time_window(root_tree,"eventTime")
+            # Plot the calibrated charge distribution (branch), applying the time cuts:
+            roottree.Draw(cluster_calibrated_charge, "int(time_window[0])\
+            <event_time and event_time<int(time_window[0])")
+            # Landau-Gauss fit
+            # Obtain fit values and add to legend
+            # add to pdf
 
     return mpv_values
 
 
-"""
 #----------------------------------------------------------------------------
 
 # Main method:
