@@ -139,12 +139,17 @@ package, you should do it
       use it. To use a method, class, package that somebody else wrote, you 
       don't need to know exactly the implementations, but the INTERFACE methods,
       that's it WHAT they can do for you and HOW you can use them.
-[AGA] The first thing we have to do is to work from the directory where 
-      postproc-alibava repository has been cloned, and in particular inside it, 
-      from /alibavaSkifftools/python. Once there, import the module where the 
-      this method (get_time_window()) is stored (without its extension .py): 
+[AGA] If we work in the same directory where postproc-alibava repository has 
+      been cloned, and in particular inside it, from /alibavaSkifftools/python, 
+      which is the directory where the module we are going to use is stored, it
+      is enough to write import analysis_functions. However, it is better to 
+      NEVER work in the same place as the functions we are importing are!
+      So, once the alibavaSkifftools package has been installed in its own 
+      directory as ALL the installation steps demand, we just have to import 
+      the module from the package: alibavaSkifftools.analysis_functions (without 
+      its extension .py) in order to use the get_time_window() method 
 
-import analysis_functions
+import alibavaSkifftools.analysis_functions as an
 import ROOT
 # Open the ROOT file which contains the data:
 rootfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
@@ -153,10 +158,10 @@ ster.root")
 # Get from the ROOT file the tree we need:
 roottree = rootfile.Get("alibava_clusters")
 # Use the method to obtain the time window, giving it the tree and where to cut:
-analysis_functions.get_time_window(roottree,"eventTime")
+time_window = an.get_time_window(roottree,"eventTime")
 
-      And the resulting window time after the execution of these lines is the following: 
-      (9.3025, 13.3025)
+      And the resulting time window after the execution of these lines is the following: 
+      time_window = (9.3025, 13.3025)
 
 
 Q7. List the names of the ROOT class that defines histograms, functions
