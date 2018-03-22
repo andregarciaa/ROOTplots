@@ -47,7 +47,7 @@ for i in elementary_particles:
         elementary_particles_2["lepton"][i] = elementary_particles[i]
     else:
         elementary_particles_2["boson"][i] = elementary_particles[i] 
-
+[JDC] PERFECT. A comment, you forgot the foton :)
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
     - It is a group of modules. It is a way of structuring Python’s module
@@ -96,6 +96,7 @@ Q5. How is it retrieved (recuperar) an existing object inside a ROOT file?
 [AGA] The Get() method is overloaded, there are several different signatures
       using this name. In this case, we need the Get(str) method, whose 
       input is a string (the object we want to take from the ROOT file).
+[JDC] DONE
 
 
 Q5.1. Write down the line needed to extract and instantiate the TTree
@@ -108,10 +109,17 @@ Q5.1. Write down the line needed to extract and instantiate the TTree
       open the root file, which has that string as name, and save it in a 
       variable, from where we take the object:
 import ROOT
+file = ROOT.TFile("393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132\
+      _beam_analysis_cluster.root")
+file.Get("alibava_clusters")
+[JDC] DONE, be careful though not to use the word "file" which is reserved to
+      python and to create a variable for the tree: 't=f.Get("alibava_clusters")'
+[AGA] Corrected:
+import ROOT
 rootfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
 393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_clu\
 ster.root")
-rootfile.Get("alibava_clusters")
+roottree = rootfile.Get("alibava_clusters")
 
 
 Q6. Check the package https://github.com/duartej/postproc-alibava/ and look
