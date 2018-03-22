@@ -4,6 +4,7 @@
 import os
 import glob
 import os.path
+import alibavaSkifftools.analysis_functions as an
 
 """
 Script which creates ROOT plots from a ROOT file. Modified for particular case of
@@ -67,7 +68,7 @@ def read_path():
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
 
-    return path_sensor_run_dic
+    return sensor_run_path_dic
 
 #----------------------------------------------------------------------------
 """
@@ -76,7 +77,7 @@ def read_path():
 # inside all the ROOT files. Creates a pdf with all the canvas, doing a Landau-Gauss
 # fit and computing the fit variables. MPVs are stored in a dictionary:
 
-def process(all_paths, branch_to_plot, sensor_types, run_numbers):
+def process(sensor_run_path_dic):
 
     for element in all_paths, run_numbers, sensor_types:
         # open ROOT loading the ROOT file:
@@ -131,4 +132,4 @@ if __name__=='__main__':
     # outputs: 
     #    dictionary with the MPV fit values of each run and sensor
     #    pdf with the plots
-    mpv_values = process(branch_to_plot, paths_sensor_run_dic)
+    mpv_values = process(sensor_run_path_dic)
