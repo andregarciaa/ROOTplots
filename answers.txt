@@ -48,6 +48,7 @@ for i in elementary_particles:
     else:
         elementary_particles_2["boson"][i] = elementary_particles[i] 
 [JDC] PERFECT. A comment, you forgot the foton :)
+[AGA] Really? It appears in the boson list.
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
     - It is a group of modules. It is a way of structuring Python’s module
@@ -114,7 +115,7 @@ file = ROOT.TFile("393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132\
 file.Get("alibava_clusters")
 [JDC] DONE, be careful though not to use the word "file" which is reserved to
       python and to create a variable for the tree: 't=f.Get("alibava_clusters")'
-[AGA] Corrected:
+[AGA] Corrected, I have added the full path of the root file:
 import ROOT
 rootfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
 393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_clu\
