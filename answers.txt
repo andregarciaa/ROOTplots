@@ -106,11 +106,12 @@ Q5.1. Write down the line needed to extract and instantiate the TTree
       which does not have a Get method
 [AGA] We cannot take a string and get from it an object, we need first to 
       open the root file, which has that string as name, and save it in a 
-      variable:
+      variable, from where we take the object:
 import ROOT
-file = ROOT.TFile("393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132\
-      _beam_analysis_cluster.root")
-file.Get("alibava_clusters")
+rootfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
+393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_clu\
+ster.root")
+rootfile.Get("alibava_clusters")
 
 
 Q6. Check the package https://github.com/duartej/postproc-alibava/ and look
@@ -128,7 +129,26 @@ package, you should do it
       to calculate the time window USING the get_time_window, so you have to 
       use it. To use a method, class, package that somebody else wrote, you 
       don't need to know exactly the implementations, but the INTERFACE methods,
-      that's it WHAT they can do for you and HOW you can use them
+      that's it WHAT they can do for you and HOW you can use them.
+[AGA] The first thing we have to do is to work from the directory where 
+      postproc-alibava repository has been cloned, and in particular inside it, 
+      from /alibavaSkifftools/python. Once there, import the module where the 
+      this method (get_time_window()) is stored (without its extension .py): 
+
+import analysis_functions
+import ROOT
+# Open the ROOT file which contains the data:
+rootfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
+393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_clu\
+ster.root")
+# Get from the ROOT file the tree we need:
+roottree = rootfile.Get("alibava_clusters")
+# Use the method to obtain the time window, giving it the tree and where to cut:
+analysis_functions.get_time_window(roottree,"eventTime")
+
+      And the resulting window time after the execution of these lines is the following: 
+      (9.3025, 13.3025)
+
 
 Q7. List the names of the ROOT class that defines histograms, functions
 and Graphs (in 1Dimension), and instantiate in python code.
@@ -149,6 +169,7 @@ Q7.1. Identify each case with the right class to use (histogram, function or gra
    sensor, which was iluminated by MIPs in a test-beam.
       - Histogram
 [JDC] RIGHT, done
+
 
 Q8. Obtain the calibrated charge distribution from the sensor N1-3_0_b1, run 393
 applying the proper time window cut and a common mode cut (no more than 20 ADC).
@@ -176,3 +197,4 @@ Q9. What does the checkout do?
 Q10. What do you have to do when you want to stop having a file in the repository 
      (which previously was git add)?
      - 
+
