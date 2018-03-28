@@ -171,6 +171,11 @@ and Graphs (in 1Dimension), and instantiate in python code.
       and graphs (what is a virtual class?), but Draw() is a METHOD not a class,
       and TCanvas is nothing to do with histograms, functions nor graphs (what is
       a TCanvas class?)
+[AGA] - A virtual class is a class whose functions and member variables can be redefined
+      in classes which inherit from it. It is a kind of very generic class.
+      - TCanvas provides the white background where the plot is going to be created.
+      It makes possible choosing special features of the plot before it is done, like
+      the axis ranges.
 
 
 Q7.1. Identify each case with the right class to use (histogram, function or graph):
@@ -188,7 +193,15 @@ Q7.1. Identify each case with the right class to use (histogram, function or gra
 Q8. Obtain the calibrated charge distribution from the sensor N1-3_0_b1, run 393
 applying the proper time window cut and a common mode cut (no more than 20 ADC).
 Write down the lines of code needed to obtain the plot in a python interpreter.
-    -
+    - Last line is wrong... :
+import ROOT
+import alibavaSkifftools.analysis_functions as an
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_tree = root_file.Get("alibava_clusters")
+time_window = an.get_time_window(root_tree,"eventTime")
+mint = float(time_window[0])
+maxt = float(time_window[1])
+root_tree.Draw("cluster_calibrated_charge", "mint<event_time and event_time<maxt")
 
 
 Q8.1. Fit the obtained distribution to a Landau*Gaus function. Write down the python
