@@ -227,10 +227,15 @@ down the python code.
 
 
 Q9. What does the checkout do?
-    - 
+    - "In Git terms, a "checkout" is the act of switching between different versions 
+      of a target entity. The git checkout command operates upon three distinct 
+      entities: files, commits, and branches". This command gives the possibility
+      of recover and see old versions of the repository.
 
 
 Q10. What do you have to do when you want to stop having a file in the repository 
      (which previously was git add)?
-     - 
+     - Delete it and commit the deletion:
+git rm file.dat
+git commit -m "Remove file.dat."
 
