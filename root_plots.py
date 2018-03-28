@@ -94,7 +94,7 @@ mpv_values = {}
             # Obtain the time window and save in a list of 2 elements:
             time_window = an.get_time_window(root_tree,"eventTime")
             # Plot the calibrated charge distribution (branch), applying the time cuts:
-            roottree.Draw(cluster_calibrated_charge, "float(time_window[0])\
+            root_tree.Draw("cluster_calibrated_charge", "float(time_window[0])\
             <event_time and event_time<float(time_window[0])")
             # Landau-Gauss fit
             # Obtain fit values and add to legend
