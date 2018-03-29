@@ -183,13 +183,14 @@ and Graphs (in 1Dimension), and instantiate in python code.
 [JDC] - Yes, then return to the original question.
 [AGA] 1) Histogram: TH1 (abstract class or pure virtual class). Example of instantiation 
       with TH1F (inputs: data, title, number of bins, x_start, x_end):
-      calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
+calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
       - If I want to check if this line works, I have created the following piece of code, which
       plots an empty histogram.......? :
 
 import ROOT
 from ROOT import TH1F
-file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
+393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
 calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
 calibrCharg.Draw()
          
@@ -232,7 +233,8 @@ Write down the lines of code needed to obtain the plot in a python interpreter.
     - Last line is wrong... :
 import ROOT
 import alibavaSkifftools.analysis_functions as an
-root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
+393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
 root_tree = root_file.Get("alibava_clusters")
 time_window = an.get_time_window(root_tree,"eventTime")
 mint = float(time_window[0])
@@ -247,7 +249,8 @@ root_tree.Draw("cluster_calibrated_charge", "mint<event_time and event_time<maxt
 [AGA] - Correct solution:
 import ROOT
 import alibavaSkifftools.analysis_functions as an
-root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
+393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
 root_tree = root_file.Get("alibava_clusters")
 time_window = an.get_time_window(root_tree,"eventTime")
 mint = float(time_window[0])
@@ -261,7 +264,9 @@ code. (You can use the Landau-gaus function placed in the postproc-alibava packa
 check in the alibavaSkifftools.analysis_function module, the landau_gaus function and
 use it to build a TF1 function).
 WARNING: DIFFICULT PROBLEM
-      -
+      - The landau_gaus(x,par) function, defined inside alibavaSkifftools.analysis_function 
+        module, takes two inputs: an array with the data to be fitted, and other array 
+        with the parameters.
 
 
 Q8.2. Obtain the parameters of the fitted function and print out their values, write
