@@ -51,6 +51,7 @@ for i in elementary_particles:
 [AGA] Really? It appears in the boson list.
 [JDC] mmm, yes, you right!
 
+
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
     - It is a group of modules. It is a way of structuring Python’s module
     namespace by using “dotted module names”.
@@ -166,6 +167,7 @@ time_window = an.get_time_window(roottree,"eventTime")
       time_window = (9.3025, 13.3025)
 [JDC] EXCELLENT!! --> DONE
 
+
 Q7. List the names of the ROOT class that defines histograms, functions
 and Graphs (in 1Dimension), and instantiate in python code.
     - TH1, TGraph, Draw(), TCanvas()
@@ -179,6 +181,37 @@ and Graphs (in 1Dimension), and instantiate in python code.
       It makes possible choosing special features of the plot before it is done, like
       the axis ranges.
 [JDC] - Yes, then return to the original question.
+[AGA] 1) Histogram: TH1 (abstract class or pure virtual class). Example of instantiation 
+      with TH1F (inputs: data, title, number of bins, x_start, x_end):
+      calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
+      - If I want to check if this line works, I have created the following piece of code, which
+      plots an empty histogram.......? :
+
+import ROOT
+from ROOT import TH1F
+file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
+calibrCharg.Draw()
+         
+      2) Graph: TGraph. Example of instantiation (arguments: int, x_array, y_array):
+      gra = TGraph(n,volts,charges)
+      - For checking if this line works, I have created the following piece of code, but it 
+      neither works:
+
+import ROOT
+n=20
+volts=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+charges=[20,31,42,53,64,75,86,97,108,119,130,141,152,163,174,185,196,217,228,239]
+gra = TGraph(n,volts,charges)
+
+      3) Function: TF1. Example of instantiation (arguments: name for the function, title of
+      the plot, initial_x, initial_y):
+      function1 = TF1("cuadcos","cos(x)^2",0,10)
+      - For checking if this line works, I have created the following piece of code:
+
+from ROOT import TF1
+function1 = TF1("cuadcos","cos(x)^2",0,10)
+function1.Draw()
 
 
 Q7.1. Identify each case with the right class to use (histogram, function or graph):
@@ -211,6 +244,16 @@ root_tree.Draw("cluster_calibrated_charge", "mint<event_time and event_time<maxt
         to include the floats obtained (mint and maxt) into the 2nd argument of Draw:
         cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
         root_tree.Draw("cluster_calibrated_charge",cut)
+[AGA] - Correct solution:
+import ROOT
+import alibavaSkifftools.analysis_functions as an
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_tree = root_file.Get("alibava_clusters")
+time_window = an.get_time_window(root_tree,"eventTime")
+mint = float(time_window[0])
+maxt = float(time_window[1])
+cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
+root_tree.Draw("cluster_calibrated_charge",cut)
 
 
 Q8.1. Fit the obtained distribution to a Landau*Gaus function. Write down the python
