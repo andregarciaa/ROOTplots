@@ -49,7 +49,7 @@ for i in elementary_particles:
         elementary_particles_2["boson"][i] = elementary_particles[i] 
 [JDC] PERFECT. A comment, you forgot the foton :)
 [AGA] Really? It appears in the boson list.
-[JDC] mmm, yes, you right!
+[JDC] mmm, yes, you're right!
 
 
 Q2. What is a package? (Trick: https://docs.python.org/2.7/tutorial/modules.html)
@@ -193,17 +193,31 @@ file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
 393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
 calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
 calibrCharg.Draw()
+[JDC] It plots an empty histogram because you did not fill anythin in it, you 
+      just instantiated, with ... 800000 bins!!?? Check the constructor signature
+      again. I don't understand why you instantiate a file for this exercise
+      
          
       2) Graph: TGraph. Example of instantiation (arguments: int, x_array, y_array):
       gra = TGraph(n,volts,charges)
       - For checking if this line works, I have created the following piece of code, but it 
       neither works:
 
-import ROOT
+from ROOT import TGraph
 n=20
 volts=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 charges=[20,31,42,53,64,75,86,97,108,119,130,141,152,163,174,185,196,217,228,239]
 gra = TGraph(n,volts,charges)
+[JDC] Look at the signature of a TGraph, you need "pointers" for the x and y
+      instantiation. But python does not have the concept of pointer. However,
+      you can use an array from the package "array" (usually this make the trick
+      whenever you need pointers in python-ROOT):
+import array
+volts=array.array('f',[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19])
+charges=array.array('f',[20,31,42,53,64,75,86,97,108,119,130,141,152,163,174,185,196,217,228,239])
+      Take a look to the TGraph.SetPoint method, which is the way of filling
+      a TGraph when you use the emtpy constructor (or just giving the number
+      of points). 
 
       3) Function: TF1. Example of instantiation (arguments: name for the function, title of
       the plot, initial_x, initial_y):
@@ -213,6 +227,7 @@ gra = TGraph(n,volts,charges)
 from ROOT import TF1
 function1 = TF1("cuadcos","cos(x)^2",0,10)
 function1.Draw()
+[JDC] RIGHT --> DONE 
 
 
 Q7.1. Identify each case with the right class to use (histogram, function or graph):
@@ -249,14 +264,15 @@ root_tree.Draw("cluster_calibrated_charge", "mint<event_time and event_time<maxt
 [AGA] - Correct solution (with better x range):
 import ROOT
 import alibavaSkifftools.analysis_functions as an
-root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
-393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/"\
+"393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
 root_tree = root_file.Get("alibava_clusters")
 time_window = an.get_time_window(root_tree,"eventTime")
 mint = float(time_window[0])
 maxt = float(time_window[1])
 cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
 root_tree.Draw("cluster_calibrated_charge>>(200,-0.5, 80000.5)",cut)
+[JDC] DONE
 
 
 Q8.1. Fit the obtained distribution to a Landau*Gaus function. Write down the python
@@ -280,6 +296,14 @@ can = TCanvas("can","", 700, 500)
 root_tree.Draw("cluster_charge>>(200,-0.5, 200.5)",cut)
 # Fit using to landau_gaus() method:
 an.landau_gaus("cluster_charge",[60,10,60000,10])
+[JDC] RIGHT. The help function should tell you how to use the function,
+      but it is not (yet) (See however: https://github.com/duartej/postproc-alibava/blob/master/alibavaSkifftools/python/analysis_functions.py#L42)
+      You can use some rough estimators you give the first values of the 
+      parameters. For example, 
+         - MPV -> use the peak of cluster_charge histogram
+         - Landau Width  = Gauss smearing -> fit a gaussian 
+         - Total Area -> the cluster_charge histogram integral (number of 
+                         entries in the range of the histogram)
 
 
 Q8.2. Obtain the parameters of the fitted function and print out their values, write
@@ -292,6 +316,7 @@ Q9. What does the checkout do?
       of a target entity. The git checkout command operates upon three distinct 
       entities: files, commits, and branches". This command gives the possibility
       of recovering and seeing old versions of the repository.
+[JDC] DONE
 
 
 Q10. What do you have to do when you want to stop having a file in the repository 
@@ -299,4 +324,5 @@ Q10. What do you have to do when you want to stop having a file in the repositor
      - Delete it and commit the deletion:
 git rm file.dat
 git commit -m "Remove file.dat."
+[DONE]
 
