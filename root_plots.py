@@ -19,15 +19,15 @@ __email__ = "andrea.garcia.alonso@cern.ch"
 
 #----------------------------------------------------------------------------
 
-"""
-Method read_path() checks the path where the root files are stored and saves them all 
-(including their full paths) in a list. Then, it goes down this list saving in a 
-dictionary the sensors names related with all the runs of each one and the full path.
-Input: nothing
-Returns: dictionary relating sensor_name--run_number--full_path
-"""
-
 def read_path():
+
+    """
+    Method read_path() checks the path where the root files are stored and saves them all
+    (including their full paths) in a list. Then, it goes down this list saving in a
+    dictionary the sensors names related with all the runs of each one and the full path.
+    Input: nothing
+    Returns: dictionary relating sensor_name--run_number--full_path
+    """
 
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
     all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
@@ -72,9 +72,11 @@ def read_path():
 
 #----------------------------------------------------------------------------
 
+
+def process(sensor_run_path_dic):
 """
 This method looks for the branch inside the "alibava_clusters" tree for all
-the ROOT files which have been stored in sensor_run_path_dic dictionary. 
+the ROOT files which have been stored in sensor_run_path_dic dictionary.
 Creates a pdf with all the canvas, doing a Landau-Gauss
 fit and computing the fit variables. MPVs are stored in a dictionary:
 input: sensor_run_path_dic dictionary.
@@ -82,9 +84,7 @@ output: pdf with all the calibrated charge distribution plots and a dictionary
 with all the MPV of the Landau-Gauss fits for those distributions.
 
 """
-
-def process(sensor_run_path_dic):
-mpv_values = {}
+    mpv_values = {}
     for sensor in sensor_run_path_dic:
         for run in sensor_run_path_dic[sensor]:
             # Open ROOT file:
