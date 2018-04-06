@@ -182,7 +182,7 @@ and Graphs (in 1Dimension), and instantiate in python code.
       the axis ranges.
 [JDC] - Yes, then return to the original question.
 [AGA] 1) Histogram: TH1 (abstract class or pure virtual class). Example of instantiation 
-      with TH1F (inputs: name of data, title, number of bins, x_start, x_end):
+      with TH1F (inputs: name of the histogram, title;Xaxis;Yaxis, number of bins, x_start, x_end):
 calibrCharg=TH1F("cluster_calibrated_charge", "Calibrated charge distribution", 800000, 0, 80000)
       - If I want to check if this line works, I have created the following piece of code, which
       plots an empty histogram.......? :
@@ -197,19 +197,22 @@ calibrCharg.Draw()
       just instantiated, with ... 800000 bins!!?? Check the constructor signature
       again. I don't understand why you instantiate a file for this exercise
       
-[AGA] I instantiate a file in order to have data to plot, although I forgot about taking 
-      from that file the tree and from it the brach with the data (the following code
-      still plots empty graph):
+[AGA] I instantiated a file in order to have data to plot, although I forgot about taking 
+      from that file the tree and from it the branch with the data. Due to extracting data 
+      from a tree is complex, now I just take fake charge values (putting less bins: it 
+      should be around: sqrt(number of data)):
 
 import ROOT
 from ROOT import TH1F
-rfile = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/\
-393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
-rtree = rfile.Get("alibava_clusters")
-calibrCharg = TH1F("rtree.cluster_calibrated_charge", "Calibrated charge distribution", 800, 0, 800)
+# instantiate empty histogram:
+calibrCharg = TH1F("Cluster calibrated charge histogram", "Calibrated charge distribution; charge;\
+ entries", 50, 0, 250)
+charges=[20,31,42,53,64,75,86,97,108,119,130,141,152,163,174,185,196,217,228,239]
+for i in charges:
+    calibrCharg.Fill(i)
+
 calibrCharg.Draw()
 
-         
       2) Graph: TGraph. Example of instantiation (arguments: int, x_array, y_array):
       gra = TGraph(n,volts,charges)
       - For checking if this line works, I have created the following piece of code, but it 
@@ -250,7 +253,6 @@ for i in range(0,20):
     gra.SetPoint(i,volts[i],charges[i])
 
 gra.Draw()
-
 
       3) Function: TF1. Example of instantiation (arguments: name for the function, title of
       the plot, initial_x, initial_y):
