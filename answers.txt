@@ -384,7 +384,6 @@ cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
 gStyle.SetStatW(0.25)
 gStyle.SetStatH(0.4)
 
-root_tree.Draw("cluster_calibrated_charge>>(200,-0.5, 80000.5)")
 # Plot with the convenient time cut:
 root_tree.Draw("cluster_charge>>histo(200,-0.5, 200.5)",cut)
 # Extract the histogram name:
@@ -415,6 +414,7 @@ The MPV is: 57.6114290933
 The Landau width is: 5.01955330094
 The Total area is: 9164.67217349
 The Gauss sigma is: 11.15510132
+[JDC] EXCELLENT!! -> DONE
 
 
 Q9. What does the checkout do?
