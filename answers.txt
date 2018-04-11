@@ -365,11 +365,56 @@ landau_gaus(x, par)
         The parameters
 ----------------
 So, it clearly expect an array as first argument, not a string
-     
+
+[AGA] Finally, the working full code for fitting with a Landau-Gauss function:
+
+import ROOT
+from ROOT import *
+import alibavaSkifftools.analysis_functions as an
+
+root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/"\
+"393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+root_tree = root_file.Get("alibava_clusters")
+time_window = an.get_time_window(root_tree,"eventTime")
+mint = float(time_window[0])
+maxt = float(time_window[1])
+cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
+
+# Choose the width and height of the stats box:
+gStyle.SetStatW(0.25)
+gStyle.SetStatH(0.4)
+
+root_tree.Draw("cluster_calibrated_charge>>(200,-0.5, 80000.5)")
+# Plot with the convenient time cut:
+root_tree.Draw("cluster_charge>>histo(200,-0.5, 200.5)",cut)
+# Extract the histogram name:
+histo = ROOT.gDirectory.Get("histo")
+# Construct a ROOT function from the python function for the fit:
+fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,-0.5, 200.5,4)
+
+# Give an initial value to the parameters of the fit function:
+# MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
+fun.SetParNames("MPV","Landau width","Total area","Gauss sigma")
+fun.SetParameter(0, histo.GetBinCenter(histo.GetMaximumBin()))
+fun.SetParameter(1, 30)
+fun.SetParameter(2, 13000)
+fun.SetParameter(3, 28)
+gStyle.SetOptFit(1111)
+histo.Fit(fun)
+
 
 Q8.2. Obtain the parameters of the fitted function and print out their values, write
 down the python code.
-      -
+    - Python code:
+
+for i in range(0,4):
+    print ("The {0} is: {1}").format(fun.GetParName(i), fun.GetParameter(i))
+
+    - Values:
+The MPV is: 57.6114290933
+The Landau width is: 5.01955330094
+The Total area is: 9164.67217349
+The Gauss sigma is: 11.15510132
 
 
 Q9. What does the checkout do?
