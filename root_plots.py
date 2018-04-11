@@ -93,10 +93,24 @@ def process(sensor_run_path_dic):
             root_tree = root_file.Get("alibava_clusters")
             # Obtain the time window and save in a list of 2 elements:
             time_window = an.get_time_window(root_tree,"eventTime")
+            mint = float(time_window[0])
+            maxt = float(time_window[1])
+            cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
             # Plot the calibrated charge distribution (branch), applying the time cuts:
-            root_tree.Draw("cluster_calibrated_charge", "float(time_window[0])\
-            <event_time and event_time<float(time_window[0])")
+            root_tree.Draw("cluster_calibrated_charge>>histo(200,-0.5, 80000.5)",cut)
             # Landau-Gauss fit
+            histo = ROOT.gDirectory.Get("histo")
+            # Construct a ROOT function from the python function for the fit:
+            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,-0.5, 200.5,4)
+            # Give an initial value to the parameters of the fit function:
+            # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
+            fun.SetParNames("MPV","Landau width","Total area","Gauss sigma")
+            fun.SetParameter(0, histo.GetBinCenter(histo.GetMaximumBin()))
+            fun.SetParameter(1, 30)
+            fun.SetParameter(2, 13000)
+            fun.SetParameter(3, 28)
+            gStyle.SetOptFit(1111)
+            histo.Fit(fun)
             # Obtain fit values and add to legend
             # add to pdf
 
