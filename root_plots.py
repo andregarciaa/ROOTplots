@@ -74,16 +74,16 @@ def read_path():
 
 
 def process(sensor_run_path_dic):
-"""
-This method looks for the branch inside the "alibava_clusters" tree for all
-the ROOT files which have been stored in sensor_run_path_dic dictionary.
-Creates a pdf with all the canvas, doing a Landau-Gauss
-fit and computing the fit variables. MPVs are stored in a dictionary:
-input: sensor_run_path_dic dictionary.
-output: pdf with all the calibrated charge distribution plots and a dictionary
-with all the MPV of the Landau-Gauss fits for those distributions.
+    """
+    This method looks for the branch inside the "alibava_clusters" tree for all
+    the ROOT files which have been stored in sensor_run_path_dic dictionary.
+    Creates a pdf with all the canvas, doing a Landau-Gauss
+    fit and computing the fit variables. MPVs are stored in a dictionary:
+    input: sensor_run_path_dic dictionary.
+    output: pdf with all the calibrated charge distribution plots and a dictionary
+    with all the MPV of the Landau-Gauss fits for those distributions.
 
-"""
+    """
     mpv_values = {}
     for sensor in sensor_run_path_dic:
         for run in sensor_run_path_dic[sensor]:
