@@ -253,6 +253,7 @@ for i in range(0,20):
     gra.SetPoint(i,volts[i],charges[i])
 
 gra.Draw()
+[JDC] EXCELLENT -->  DONE
 
       3) Function: TF1. Example of instantiation (arguments: name for the function, title of
       the plot, initial_x, initial_y):
@@ -347,6 +348,23 @@ Traceback (most recent call last):
   File "/afs/cern.ch/user/a/agarciaa/.local/lib/python2.7/site-packages/alibavaSkifftools/analysis_functions.py", line 54, in landau_gaus
     xlow = max(0.0,x[0]-sc*par[3])
 TypeError: unsupported operand type(s) for -: 'str' and 'float'
+[JDC] If you look at the signature of the function:
+---------------
+>>> help(landau_gaus)
+landau_gaus(x, par)
+    Definition of a Landau convulated with gaus
+
+    Based on
+    https://root.cern.ch/root/html/tutorials/fit/langaus.C.html
+
+    Parameters
+    ----------
+    x: array
+        The variable
+    par: array
+        The parameters
+----------------
+So, it clearly expect an array as first argument, not a string
      
 
 Q8.2. Obtain the parameters of the fitted function and print out their values, write
