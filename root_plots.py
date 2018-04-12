@@ -65,7 +65,7 @@ def read_path():
             sensor_run_path_dic[sensor_name] = {}
 
         # get the run number from the path of each root file:
-        run_number = file.split("/")[7].replace("run000","")
+        run_number = rootfile.split("/")[7].replace("run000","")
 
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
@@ -130,7 +130,7 @@ def process(sensor_run_path_dic):
             # add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
                 # Instantiate a dictionary for each sensor:
-                mpv_values_sensor[sensor] = {}
+                mpv_values[sensor] = {}
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
 
@@ -144,7 +144,7 @@ if __name__=='__main__':
 
     # read method obtains sensor name and run number strings and root file paths list:
     # output: one dictionary
-    path_sensor_run_dic = read_path()
+    sensor_run_path_dic = read_path()
 
     # plot method saves a pdf with all the canvas of the calibrated charge distributions and a 
     # dictionary containing sensor name, run number and MPV obtained. In order to do it, it opens 
