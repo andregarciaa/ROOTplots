@@ -100,6 +100,7 @@ def process(sensor_run_path_dic):
             root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
+            # Check if the required branck exists:
             if(hasattr(root_tree, "eventTime")=="False"): 
                 raise RunTimeError("\033[1;mThere is no eventTime branch in the tree of \
                 sensor {0} at run {1}.format(sensor, run)\033[1;m")
