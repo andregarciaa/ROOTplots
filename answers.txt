@@ -372,8 +372,10 @@ import ROOT
 from ROOT import *
 import alibavaSkifftools.analysis_functions as an
 
-root_file = ROOT.TFile("/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/"\
-"393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root")
+name_file = "/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/run000393/"\
+"393_2017-05-21_17-48_gerva_MB2_N1-3_-50V_-76d0uA_-25C_lat132_beam_analysis_cluster.root"
+
+root_file = ROOT.TFile(name_file)
 root_tree = root_file.Get("alibava_clusters")
 time_window = an.get_time_window(root_tree,"eventTime")
 mint = float(time_window[0])
@@ -399,7 +401,7 @@ fun.SetParameter(1, 30)
 fun.SetParameter(2, 13000)
 fun.SetParameter(3, 28)
 gStyle.SetOptFit(1111)
-histo.Fit(fun)
+histo.Fit(fun,"","",30,120)
 
 
 Q8.2. Obtain the parameters of the fitted function and print out their values, write
