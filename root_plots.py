@@ -88,8 +88,8 @@ def process(sensor_run_path_dic):
     """
     mpv_values = {}
 
-    # Open file Cluster_calibr_charge_distributions.pdf:
-    canvas.Print("Cluster_calibr_charge_distributions.pdf[")
+    # Create canvas to later save the histograms in pdf document:
+    canvas = TCanvas("canvas")
 
     for sensor in sensor_run_path_dic:
         for run in sensor_run_path_dic[sensor]:
