@@ -87,7 +87,7 @@ def process(sensor_run_path_dic):
 
     """
     mpv_values = {}
-
+    first_plot_done="no"
     # Create canvas to later save the histograms in pdf document:
     canvas = TCanvas("canvas")
 
@@ -128,8 +128,12 @@ def process(sensor_run_path_dic):
             histo.Fit(fun,"","",1000,60000)
 
             # Save in ONE PDF document all the plots:
-            canvas.SaveAs("Cluster_calibr_charge_distributions.pdf)",\
-            ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+            if (first_plot_done=="no"):
+                canvas.SaveAs("Cluster_calibr_charge_distributions.pdf)",\
+                ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+            else:
+                canvas.Add("Cluster_calibr_charge_distributions.pdf)",\
+                ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
