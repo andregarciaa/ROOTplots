@@ -142,20 +142,6 @@ def process(sensor_run_path_dic):
 # Main method:
 if __name__=='__main__':
 
-    import ArgumentParser
-
-    parser = program 'root_plots'
-
-    # Positional arguments:
-    path_with_root_file (Where root file is located and its name)
-    # tree of the file which is going to be used is "alibava_clusters", but user has to say from which 
-    # branch of this tree wants to have the plot.
-    branch_to_plot (branch of alibava_clusters)
-
-    # read inputs executing parser:
-    args = parser
-    path_with_root_file
-    
     # read method obtains sensor name and run number strings and root file paths list:
     # output: one dictionary
     path_sensor_run_dic = read_path()
