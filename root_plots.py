@@ -110,9 +110,15 @@ def process(sensor_run_path_dic):
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            histo.Fit(fun)
-            # Obtain fit values and add to legend
-            # add to pdf
+            # Plot and fit the range from 1000 to 60000:
+            histo.Fit(fun,"","",1000,60000)
+
+            # add MPV to mpv_values dictionary:
+            if not mpv_values.has_key(sensor_name):
+                # Instantiate a dictionary for each sensor:
+                mpv_values_sensor[sensor_name] = {}
+            # Save the MPV value for each sensor and run number:
+            mpv_values[sensor_name][run_number] = fun.GetParName(0)
 
     return mpv_values
 
