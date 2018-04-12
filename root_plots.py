@@ -5,6 +5,8 @@ import os
 import glob
 import os.path
 import alibavaSkifftools.analysis_functions as an
+import ROOT
+from ROOT import *
 
 """
 Script which creates ROOT plots from a ROOT file. Modified for particular case of
@@ -96,6 +98,8 @@ def process(sensor_run_path_dic):
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
+            # Create canvas to later save the histograms in pdf document:
+            canvas = TCanvas("canvas")
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>histo(200,-0.5, 80000.5)",cut)
             # Landau-Gauss fit
@@ -113,12 +117,22 @@ def process(sensor_run_path_dic):
             # Plot and fit the range from 1000 to 60000:
             histo.Fit(fun,"","",1000,60000)
 
+            # Save in ONE PDF document all the plots:
+            if mpv_values=={}:
+                # first plot:
+                canvas.Print("Cluster_calibr_charge_distributions.pdf(","{}".format(sensor_run_path_dic[sensor][run]))
+            elif len(mpv_values)==len(sensor_run_path_dic)-1:
+                # last plot:
+                canvas.Print("Cluster_calibr_charge_distributions.pdf)","{}".format(sensor_run_path_dic[sensor][run]))
+            else:
+                canvas.Print("Cluster_calibr_charge_distributions.pdf","{}".format(sensor_run_path_dic[sensor][run]))
+
             # add MPV to mpv_values dictionary:
-            if not mpv_values.has_key(sensor_name):
+            if not mpv_values.has_key(sensor):
                 # Instantiate a dictionary for each sensor:
-                mpv_values_sensor[sensor_name] = {}
+                mpv_values_sensor[sensor] = {}
             # Save the MPV value for each sensor and run number:
-            mpv_values[sensor_name][run_number] = fun.GetParName(0)
+            mpv_values[sensor][run] = fun.GetParName(0)
 
     return mpv_values
 
