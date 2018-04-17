@@ -86,6 +86,7 @@ def process(sensor_run_path_dic):
     with all the MPV of the Landau-Gauss fits for those distributions.
 
     """
+    ROOT.gROOT.SetBatch()
     mpv_values = {}
     first_plot_done = False
     # Create canvas to later save the histograms in pdf document:
@@ -97,19 +98,19 @@ def process(sensor_run_path_dic):
             root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
-            print(root_file)
             # Check if the required branck exists:
             if not hasattr(root_tree, "eventTime"): 
                 print "There is no eventTime branch in the tree of \
                 sensor {0} at run {1}.format(sensor, run)"
                 continue
-            print(root_file)                
+            if root_tree.GetEntries()<2000:
+                print root_file+" has less than 2000 events."
+                continue
             # Obtain the time window and save in a list of 2 elements:
-            time_window = an.get_time_window(root_tree,"",fog_brname="cluster_calibrated_charge",time_brname="eventTime")
+            time_window = an.get_time_window(root_tree,"")
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
-            print(time_window)
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>histo(200,-0.5, 80000.5)",cut)
 
@@ -146,10 +147,10 @@ def process(sensor_run_path_dic):
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
             k+=1
-            if k>4:
+            if k>=4:
                 break
+        break
             
-
     # When all the data has been checked, close the pdf file:
     canvas.Print("Cluster_calibr_charge_distributions.pdf)",\
     ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
