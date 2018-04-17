@@ -129,10 +129,12 @@ def process(sensor_run_path_dic):
 
             # Save in ONE PDF document all the plots:
             if (first_plot_done=="no"):
-                canvas.SaveAs("Cluster_calibr_charge_distributions.pdf)",\
+                # for the 1st plot, open a pdf file:
+                canvas.SaveAs("Cluster_calibr_charge_distributions.pdf(",\
                 ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
             else:
-                canvas.Add("Cluster_calibr_charge_distributions.pdf)",\
+                # fill the pdf file with all the generated plots:
+                canvas.Print("Cluster_calibr_charge_distributions.pdf",\
                 ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
 
             # Add MPV to mpv_values dictionary:
@@ -143,6 +145,9 @@ def process(sensor_run_path_dic):
             mpv_values[sensor][run] = fun.GetParName(0)
             first_plot_done = "yes"
 
+    # When all the data has been checked, close the pdf file:
+    canvas.SaveAs("Cluster_calibr_charge_distributions.pdf)",\
+    ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
     return mpv_values
 
 
