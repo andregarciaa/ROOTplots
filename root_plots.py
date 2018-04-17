@@ -32,11 +32,12 @@ def read_path():
     """
 
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
-    all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
+    # all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*beam_analysis_cluster.root')
 
-    # Due to last line is hardcoded, if list is empty, raise the following error:
-    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access to the \
-    /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    # Due to last line is hardcoded, if list is empty, raise the following error (FOR /EOS/...):
+    # if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+    # /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
 
     # example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root
@@ -91,33 +92,44 @@ def process(sensor_run_path_dic):
     first_plot_done = False
     # Create canvas to later save the histograms in pdf document:
     canvas = TCanvas("canvas")
-    k=0
+
+    # Create PDF file which will contain all the plots:
+    name_pdf = "Cluster_calibr_charge_distributions.pdf"
+    canvas.Print(name_pdf+"(")
+
     for sensor,sensor_dict in sensor_run_path_dic.iteritems():
         for run,filename in sensor_dict.iteritems():
             # Open ROOT file:
             root_file = ROOT.TFile(filename)
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
-            # Check if the required branck exists:
+
+            # Check if the required branch exists and there is data:
             if not hasattr(root_tree, "eventTime"): 
                 print "There is no eventTime branch in the tree of \
                 sensor {0} at run {1}.format(sensor, run)"
                 continue
             if root_tree.GetEntries()<2000:
-                print root_file+" has less than 2000 events."
+                print "{0} has less than 2000 events!!".format(root_file)
                 continue
+
             # Obtain the time window and save in a list of 2 elements:
             time_window = an.get_time_window(root_tree,"")
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
+
+            # Choose width and height of the stats box:
+            gStyle.SetStatW(0.25)
+            gStyle.SetStatH(0.25)
+
             # Plot the calibrated charge distribution (branch), applying the time cuts:
-            root_tree.Draw("cluster_calibrated_charge>>histo(200,-0.5, 80000.5)",cut)
+            root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
 
             # Landau-Gauss fit
-            histo = ROOT.gDirectory.Get("histo")
+            histo = ROOT.gDirectory.Get("Landau-Gauss")
             # Construct a ROOT function from the python function for the fit:
-            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,0, 70000.5,4)
+            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,70000.5,4)
             # Give an initial value to the parameters of the fit function:
             # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
             fun.SetParNames("MPV","Landau width","Total area","Gauss sigma")
@@ -126,19 +138,18 @@ def process(sensor_run_path_dic):
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            # Plot and fit the range from 1000 to 60000:
-            histo.Fit(fun,"","",1000,60000)
 
-            # Save in ONE PDF document all the plots:
-            if first_plot_done:
-                # for the 1st plot, open a pdf file:
-                canvas.Print("Cluster_calibr_charge_distributions.pdf(",\
-                ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
-                first_plot_done = True
-            else:
-                # fill the pdf file with all the generated plots:
-                canvas.Print("Cluster_calibr_charge_distributions.pdf",\
-                ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+            # Disable original title:
+            gStyle.SetOptTitle(0)
+            newtitle = TPaveLabel(.11,.95,.35,.99,"new title","brndc")
+            #newtitle = TPaveLabel(.11,.95,.35,.99,"cluster_calibrated_charge sensor {0} run{1}".format(sensor,run),"brndc")
+            newtitle.Draw()
+
+            # Plot and fit the range from 1000 to 60000:
+            histo.Fit(fun,"","",10000,60000)
+            histo.Draw()
+            # Save one PDF document for all the generated plots:
+            canvas.Print(name_pdf,"Title: Calibrated charge distribution for {0}, run {1}".format(sensor,run))
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
@@ -146,14 +157,9 @@ def process(sensor_run_path_dic):
                 mpv_values[sensor] = {}
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
-            k+=1
-            if k>=4:
-                break
-        break
             
     # When all the data has been checked, close the pdf file:
-    canvas.Print("Cluster_calibr_charge_distributions.pdf)",\
-    ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+    canvas.Print(name_pdf+")")
     return mpv_values
 
 
