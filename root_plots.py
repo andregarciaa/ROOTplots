@@ -87,7 +87,7 @@ def process(sensor_run_path_dic):
 
     """
     mpv_values = {}
-    first_plot_done="no"
+    first_plot_done = "no"
     # Create canvas to later save the histograms in pdf document:
     canvas = TCanvas("canvas")
 
@@ -141,6 +141,7 @@ def process(sensor_run_path_dic):
                 mpv_values[sensor] = {}
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
+            first_plot_done = "yes"
 
     return mpv_values
 
