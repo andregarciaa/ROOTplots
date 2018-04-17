@@ -87,35 +87,36 @@ def process(sensor_run_path_dic):
 
     """
     mpv_values = {}
-    first_plot_done = "no"
+    first_plot_done = False
     # Create canvas to later save the histograms in pdf document:
     canvas = TCanvas("canvas")
-
-    for sensor in sensor_run_path_dic:
-        for run in sensor_run_path_dic[sensor]:
+    k=0
+    for sensor,sensor_dict in sensor_run_path_dic.iteritems():
+        for run,filename in sensor_dict.iteritems():
             # Open ROOT file:
             root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
+            print(root_file)
             # Check if the required branck exists:
-            if(hasattr(root_tree, "eventTime")=="False"): 
-                raise RunTimeError("\033[1;mThere is no eventTime branch in the tree of \
-                sensor {0} at run {1}.format(sensor, run)\033[1;m")
+            if not hasattr(root_tree, "eventTime"): 
+                print "There is no eventTime branch in the tree of \
+                sensor {0} at run {1}.format(sensor, run)"
                 continue
-                
+            print(root_file)                
             # Obtain the time window and save in a list of 2 elements:
-            time_window = an.get_time_window(root_tree,"eventTime")
+            time_window = an.get_time_window(root_tree,"",fog_brname="cluster_calibrated_charge",time_brname="eventTime")
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
-
+            print(time_window)
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>histo(200,-0.5, 80000.5)",cut)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("histo")
             # Construct a ROOT function from the python function for the fit:
-            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,-0.5, 200.5,4)
+            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,0, 70000.5,4)
             # Give an initial value to the parameters of the fit function:
             # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
             fun.SetParNames("MPV","Landau width","Total area","Gauss sigma")
@@ -128,14 +129,15 @@ def process(sensor_run_path_dic):
             histo.Fit(fun,"","",1000,60000)
 
             # Save in ONE PDF document all the plots:
-            if (first_plot_done=="no"):
+            if first_plot_done:
                 # for the 1st plot, open a pdf file:
-                canvas.SaveAs("Cluster_calibr_charge_distributions.pdf(",\
-                ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+                canvas.Print("Cluster_calibr_charge_distributions.pdf(",\
+                ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+                first_plot_done = True
             else:
                 # fill the pdf file with all the generated plots:
                 canvas.Print("Cluster_calibr_charge_distributions.pdf",\
-                ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+                ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
@@ -143,11 +145,14 @@ def process(sensor_run_path_dic):
                 mpv_values[sensor] = {}
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
-            first_plot_done = "yes"
+            k+=1
+            if k>4:
+                break
+            
 
     # When all the data has been checked, close the pdf file:
-    canvas.SaveAs("Cluster_calibr_charge_distributions.pdf)",\
-    ("Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
+    canvas.Print("Cluster_calibr_charge_distributions.pdf)",\
+    ("Title: Calibrated charge distribution for {0}").format(sensor_run_path_dic[sensor][run]))
     return mpv_values
 
 
