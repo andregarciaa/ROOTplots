@@ -95,7 +95,7 @@ def process(sensor_run_path_dic):
     for sensor,sensor_dict in sensor_run_path_dic.iteritems():
         for run,filename in sensor_dict.iteritems():
             # Open ROOT file:
-            root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
+            root_file = ROOT.TFile(filename)
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
             # Check if the required branck exists:
