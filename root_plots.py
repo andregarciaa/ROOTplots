@@ -7,6 +7,9 @@ import os.path
 import alibavaSkifftools.analysis_functions as an
 import ROOT
 from ROOT import *
+from sifca_utils.plotting import set_sifca_style
+sifca_style=set_sifca_style(stat_off=False)
+sifca_style.cd()  # esto quizas no es necesario, pero no hace danyo
 
 """
 Script which creates ROOT plots from a ROOT file. Modified for particular case of
@@ -122,6 +125,7 @@ def process(sensor_run_path_dic):
             # Choose width and height of the stats box:
             gStyle.SetStatW(0.25)
             gStyle.SetStatH(0.25)
+            gStyle.SetStatY(0.93)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
