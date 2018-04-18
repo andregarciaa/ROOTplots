@@ -138,18 +138,15 @@ def process(sensor_run_path_dic):
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-
-            # Disable original title:
-            gStyle.SetOptTitle(0)
-            newtitle = TPaveLabel(.11,.95,.35,.99,"new title","brndc")
-            #newtitle = TPaveLabel(.11,.95,.35,.99,"cluster_calibrated_charge sensor {0} run{1}".format(sensor,run),"brndc")
-            newtitle.Draw()
+            histo.SetTitle("Calibrated charge distribution for run {0} of \
+            sensor {1}".format(run,sensor))
 
             # Plot and fit the range from 1000 to 60000:
             histo.Fit(fun,"","",10000,60000)
             histo.Draw()
             # Save one PDF document for all the generated plots:
-            canvas.Print(name_pdf,"Title: Calibrated charge distribution for {0}, run {1}".format(sensor,run))
+            canvas.Print(name_pdf,"Title: Calibrated charge distribution for {0}, \
+            run {1}".format(sensor,run))
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
