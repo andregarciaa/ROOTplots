@@ -135,12 +135,6 @@ def process(sensor_run_path_dic):
 sensor {0} at run {1}".format(sensor, run)
                 print "File: {0}".format(filename)
                 continue
-            if not hasattr(root_tree, "cluster_calibrated_charge"):
-                print "There is no cluster_calibrated_charge branch in \
-the tree of sensor {0} at run {1}.".format(sensor, run)
-                print "File: {0}".format(filename)
-
-                continue
             if root_tree.GetEntries()<2000:
                 print "{0} has less than 2000 events!!".format(root_file)
                 continue
