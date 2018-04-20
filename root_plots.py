@@ -123,7 +123,7 @@ def process(sensor_run_path_dic):
     canvas.Print(name_pdf+"(")
 
     for sensor,sensor_dict in sensor_run_path_dic.iteritems():
-        for run,filename in sensor_dict.iteritems()
+        for run,filename in sensor_dict.iteritems():
             # Open ROOT file:
             root_file = ROOT.TFile(filename)
             # Get the "alibava_clusters" tree from the ROOT file:
@@ -132,11 +132,14 @@ def process(sensor_run_path_dic):
             # Check if the required branch exists and there is data:
             if not hasattr(root_tree, "eventTime"): 
                 print "There is no eventTime branch in the tree of \
-sensor {0} at run {1}.format(sensor, run)"
+sensor {0} at run {1}".format(sensor, run)
+                print "File: {0}".format(filename)
                 continue
             if not hasattr(root_tree, "cluster_calibrated_charge"):
                 print "There is no cluster_calibrated_charge branch in \
-the tree of sensor {0} at run {1}".format(sensor, run)
+the tree of sensor {0} at run {1}.".format(sensor, run)
+                print "File: {0}".format(filename)
+
                 continue
             if root_tree.GetEntries()<2000:
                 print "{0} has less than 2000 events!!".format(root_file)
