@@ -129,15 +129,16 @@ def process(sensor_run_path_dic):
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
 
-            # Check if the required branch exists and there is data:
+            # Check if the required branches exist and there is data:
             if not hasattr(root_tree, "eventTime"): 
-                print "There is no eventTime branch in the tree of \
-sensor {0} at run {1}".format(sensor, run)
+                print "There is no eventTime branch in the alibava_clusters\
+tree of sensor {0} at run {1}".format(sensor, run)
                 print "File: {0}".format(filename)
                 continue
             if not hasattr(root_tree, "cluster_calibrated_charge"):
                 print "There is no cluster_calibrated_charge branch in \
-the tree of sensor {0} at run {1}".format(sensor, run)
+the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
+                print "File: {0}".format(filename)
                 continue                
             if root_tree.GetEntries()<2000:
                 print "{0} has less than 2000 events!!".format(root_file)
@@ -154,7 +155,7 @@ the tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatH(0.25)
             gStyle.SetStatY(0.93)
 
-            # Plot the calibrated charge distribution (tree), applying the time cuts:
+            # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
 
             # Landau-Gauss fit
