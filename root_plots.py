@@ -150,16 +150,18 @@ sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatH(0.25)
             gStyle.SetStatY(0.93)
 
-            # Plot the calibrated charge distribution (branch), applying the time cuts:
+            # Plot the calibrated charge distribution (tree), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
-            print "heeeeeeeey {0}".format(sensor,run)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
+
             # Construct a ROOT function from the python function for the fit:
             fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,70000.5,4)
+
             # Give an initial value to the parameters of the fit function:
             # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
+
             fun.SetParNames("MPV","Landau width","Total area","Gauss sigma")
             fun.SetParameter(0, histo.GetBinCenter(histo.GetMaximumBin()))
             fun.SetParameter(1, 30)
