@@ -122,11 +122,10 @@ def process(sensor_run_path_dic):
     name_pdf = "Cluster_calibr_charge_distributions.pdf"
     canvas.Print(name_pdf+"(")
 
-
-    for sensor in sensor_run_path_dic:
-        for run in sensor_run_path_dic[sensor]:    
+     for sensor,sensor_dict in sensor_run_path_dic.iteritems():
+         for run,filename in sensor_dict.iteritems()
             # Open ROOT file:
-            root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
+            root_file = ROOT.TFile(filename)
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
 
