@@ -34,9 +34,9 @@ def read_path():
     Returns: dictionary relating sensor_name--run_number--full_path
     """
 
+    # FOR ALL THE 3D SENSORS OF TB 2017:---------------------------------------------------------------
     # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
     # all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*beam_analysis_cluster.root')
 
     # Due to last line is hardcoded, if list is empty, raise the following error (FOR /EOS/...):
     # if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
@@ -47,6 +47,16 @@ def read_path():
     # inside it, there will be:
     #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
+    # ------------------------------------------------------------------------------------------------
+
+
+    # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    # example of path_with_root_file:
+    # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
+    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
+    # ------------------------------------------------------------------------------------------------
+
 
     # Instantiate the big dictionary:
     sensor_run_path_dic = {}
@@ -55,12 +65,21 @@ def read_path():
     for rootfile in all_paths:
 
         # obtain the name of the sensor for each rootfile in the directory:
-        sensor_name = rootfile.split("/")[6]
-        
+
+        # FOR ALL THE 3D SENSORS OF TB 2017:----------------------------------------------------------
+        # sensor_name = rootfile.split("/")[6]
         # In the directory there are also data from iLGAD, LGAD and REF, ignore:
-        if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
-        "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"): 
+        # if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
+        # "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
+        #     continue
+        #---------------------------------------------------------------------------------------------
+        # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:-----------------------------------------------
+        sensor_name = rootfile.split("/")[10]
+        # In the directory there are also folders which are not of M1-5 and N1-3, ignore:
+        if sensor_name != "N1-3" and sensor_name != "M1-5":
             continue
+        #---------------------------------------------------------------------------------------------
+
 
         # If the information of the current kind of sensor hasn't been collected yet, create 
         # its own dictionary inside a new key of the big one:
@@ -69,7 +88,10 @@ def read_path():
             sensor_run_path_dic[sensor_name] = {}
 
         # get the run number from the path of each root file:
-        run_number = rootfile.split("/")[7].replace("run000","")
+        # FOR ALL THE 3D SENSORS OF TB 2017:----------------------------------------------------------
+        # run_number = rootfile.split("/")[7].replace("run000","")
+        # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:-----------------------------------------------
+        run_number = rootfile.split("/")[11].split("_")[0]
 
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
@@ -100,17 +122,22 @@ def process(sensor_run_path_dic):
     name_pdf = "Cluster_calibr_charge_distributions.pdf"
     canvas.Print(name_pdf+"(")
 
-    for sensor,sensor_dict in sensor_run_path_dic.iteritems():
-        for run,filename in sensor_dict.iteritems():
+
+    for sensor in sensor_run_path_dic:
+        for run in sensor_run_path_dic[sensor]:    
             # Open ROOT file:
-            root_file = ROOT.TFile(filename)
+            root_file = ROOT.TFile(sensor_run_path_dic[sensor][run])
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
 
             # Check if the required branch exists and there is data:
             if not hasattr(root_tree, "eventTime"): 
                 print "There is no eventTime branch in the tree of \
-                sensor {0} at run {1}.format(sensor, run)"
+sensor {0} at run {1}.format(sensor, run)"
+                continue
+            if not hasattr(root_tree, "cluster_calibrated_charge"):
+                print "There is no cluster_calibrated_charge branch in \
+the tree of sensor {0} at run {1}".format(sensor, run)
                 continue
             if root_tree.GetEntries()<2000:
                 print "{0} has less than 2000 events!!".format(root_file)
@@ -129,6 +156,7 @@ def process(sensor_run_path_dic):
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
+            print "heeeeeeeey {0}".format(sensor,run)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -142,15 +170,12 @@ def process(sensor_run_path_dic):
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            histo.SetTitle("Calibrated charge distribution for run {0} of \
-            sensor {1}".format(run,sensor))
 
             # Plot and fit the range from 1000 to 60000:
             histo.Fit(fun,"","",10000,60000)
             histo.Draw()
             # Save one PDF document for all the generated plots:
-            canvas.Print(name_pdf,"Title: Calibrated charge distribution for {0}, \
-            run {1}".format(sensor,run))
+            canvas.Print(name_pdf,"Title: Calibrated charge distribution la que sea.")
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
@@ -158,7 +183,7 @@ def process(sensor_run_path_dic):
                 mpv_values[sensor] = {}
             # Save the MPV value for each sensor and run number:
             mpv_values[sensor][run] = fun.GetParName(0)
-            
+
     # When all the data has been checked, close the pdf file:
     canvas.Print(name_pdf+")")
     return mpv_values
