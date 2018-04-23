@@ -118,6 +118,11 @@ def process(sensor_run_path_dic):
                mpv_values: dictionary. MPVs of the Landau-Gauss fits
     """
 
+    correction = 1
+
+    # Do you want to correct the calibration or gain factor by 1.075?? (uncomment:)
+    # correction = 1.075
+
     ROOT.gROOT.SetBatch()
     mpv_values = {}
 
@@ -163,7 +168,8 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatY(0.93)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
-            root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
+            # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
+            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(200,-0.5, 80000.5)",cut)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -194,13 +200,20 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             histo.SetTitle("{0} Sensor {1} run {2} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt))
 
-            # Plot and fit the range from 1000 to 60000:
-            histo.Fit(fun,"","",7000,60000)
+            # Plot and fit the range with automatic range:
+            fit_range_min = histo.GetMaximumBin()-20000
+            fit_range_max = histo.GetMaximumBin()+40000
+            histo.Fit(fun,"","",fit_range_min,fit_range_max)
             histo.Draw()
 
             # Add MPV value (peak)
             pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
-            pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            if correction==1:  
+                pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
+                pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            else:
+                pt = TPaveText(.6, 0.4, 0.9, 0.48, "NDC")
+                pt.AddText("Peak: {0} ke. Correction: {1}".format("{0:.1f}".format(fun.GetParameter(0)/1000.0),correction))
             pt.Draw()
 
             # Save one PDF document for all the generated plots:
