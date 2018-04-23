@@ -161,13 +161,20 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatW(0.25)
             gStyle.SetStatH(0.20)
             gStyle.SetStatY(0.93)
-            gStyle.SetTitleSize(0.06)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
+
+            # Set axis titles and their sizes and positions:
+            histo.GetXaxis().SetTitle("Q / electrons")
+            histo.GetYaxis().SetTitle("entries")
+            histo.GetXaxis().SetTitleSize(0.035)
+            histo.GetYaxis().SetTitleSize(0.035)
+            histo.GetXaxis().SetTitleOffset(1.6)
+            histo.GetYaxis().SetTitleOffset(1.6)
 
             # Construct a ROOT function from the python function for the fit:
             fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,70000.5,4)
