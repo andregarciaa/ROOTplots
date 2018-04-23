@@ -55,9 +55,9 @@ def read_path():
 
 
     # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # Check with ONE file:
-    # all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
+    all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
     # example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -197,6 +197,12 @@ time window < {4}".format(measure,sensor,run,mint,maxt))
             # Plot and fit the range from 1000 to 60000:
             histo.Fit(fun,"","",7000,60000)
             histo.Draw()
+
+            # Add MPV value (peak)
+            pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
+            pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            pt.Draw()
+
             # Save one PDF document for all the generated plots:
             canvas.Print(name_pdf,"Title: {0} run {1} Calib charge.".format(sensor,run))
 
