@@ -52,6 +52,8 @@ def read_path():
 
     # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
     all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    # Check with ONE file:
+    # all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
     # example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -114,7 +116,7 @@ def process(sensor_run_path_dic):
     """
     ROOT.gROOT.SetBatch()
     mpv_values = {}
-    first_plot_done = False
+
     # Create canvas to later save the histograms in pdf document:
     canvas = TCanvas("canvas")
 
@@ -128,6 +130,7 @@ def process(sensor_run_path_dic):
             root_file = ROOT.TFile(filename)
             # Get the "alibava_clusters" tree from the ROOT file:
             root_tree = root_file.Get("alibava_clusters")
+            root_tree.Show(0)
 
             # Check if the required branches exist and there is data:
             if not hasattr(root_tree, "eventTime"): 
@@ -152,7 +155,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
 
             # Choose width and height of the stats box:
             gStyle.SetStatW(0.25)
-            gStyle.SetStatH(0.25)
+            gStyle.SetStatH(0.20)
             gStyle.SetStatY(0.93)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
@@ -173,14 +176,14 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            histo.SetTitle("Calibrated charge distribution for run {0} of \
-            sensor {1}".format(run,sensor))
+            histo.SetTitle("Sensor {0} run {1} Calibrated charge. {2} < \
+time window < {3}".format(sensor,run,mint,maxt))
 
             # Plot and fit the range from 1000 to 60000:
-            histo.Fit(fun,"","",10000,60000)
+            histo.Fit(fun,"","",7000,60000)
             histo.Draw()
             # Save one PDF document for all the generated plots:
-            canvas.Print(name_pdf,"Title: Calibrated charge distribution la que sea.")
+            canvas.Print(name_pdf,"Title: {0} run {1} Calib charge.".format(sensor,run))
 
             # Add MPV to mpv_values dictionary:
             if not mpv_values.has_key(sensor):
