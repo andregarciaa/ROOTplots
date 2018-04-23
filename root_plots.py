@@ -161,6 +161,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatW(0.25)
             gStyle.SetStatH(0.20)
             gStyle.SetStatY(0.93)
+            gStyle.SetTitleSize(0.06)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(200,-0.5, 80000.5)",cut)
@@ -180,8 +181,11 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            histo.SetTitle("Sensor {0} run {1} Calibrated charge. {2} < \
-time window < {3}".format(sensor,run,mint,maxt))
+            
+            measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
+            
+            histo.SetTitle("{0} Sensor {1} run {2} Calibrated charge. {3} < \
+time window < {4}".format(measure,sensor,run,mint,maxt))
 
             # Plot and fit the range from 1000 to 60000:
             histo.Fit(fun,"","",7000,60000)
