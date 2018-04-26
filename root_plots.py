@@ -39,30 +39,41 @@ def read_path():
     """
 
     # FOR ALL THE 3D SENSORS OF TB 2017:---------------------------------------------------------------
-    # list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
+    #selection = 1
+    # - list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
     # all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
-
-    # Due to last line is hardcoded, if list is empty, raise the following error (FOR /EOS/...):
+    # - Due to last line is hardcoded, if list is empty, raise the following error (FOR /EOS/...):
     # if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
     # /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
-
-    # example of path_with_root_file:
+    # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root
-    # inside it, there will be:
+    # - inside it, there will be:
     #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
 
     # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
-    # Check with ONE file:
+    #selection = 2
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    # - Check with ONE file:
     # all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
-    # example of path_with_root_file:
+    # - example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
+    # FOR M1-5 AND N1-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
+    selection = 3
+    all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
+    all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
+    all_paths = all_paths1 + all_paths2
+    # - example of path_with_root_file:
+    # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
+    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
+    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    # ------------------------------------------------------------------------------------------------
 
     # Instantiate the big dictionary:
     sensor_run_path_dic = {}
@@ -72,20 +83,22 @@ def read_path():
 
         # obtain the name of the sensor for each rootfile in the directory:
 
-        # FOR ALL THE 3D SENSORS OF TB 2017:----------------------------------------------------------
-        # sensor_name = rootfile.split("/")[6]
-        # In the directory there are also data from iLGAD, LGAD and REF, ignore:
-        # if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
-        # "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
-        #     continue
-        #---------------------------------------------------------------------------------------------
-        # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:-----------------------------------------------
-        sensor_name = rootfile.split("/")[10]
-        # In the directory there are also folders which are not of M1-5 and N1-3, ignore:
-        if sensor_name != "N1-3" and sensor_name != "M1-5":
-            continue
-        #---------------------------------------------------------------------------------------------
-
+        if selection == 1:
+            # FOR ALL THE 3D SENSORS OF TB 2017:--------------------------------------------
+            sensor_name = rootfile.split("/")[6]
+            # In the directory there are also data from iLGAD, LGAD and REF, ignore:
+            if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
+"iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
+                continue
+        elif selection == 2:
+            # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:---------------------------------
+            sensor_name = rootfile.split("/")[10]
+            # In the directory there are also folders which are not of M1-5 and N1-3, ignore:
+            if sensor_name != "N1-3" and sensor_name != "M1-5":
+                continue
+        elif selection ==3:
+            # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
+            sensor_name = rootfile.split("/")[6]
 
         # If the information of the current kind of sensor hasn't been collected yet, create 
         # its own dictionary inside a new key of the big one:
@@ -94,10 +107,10 @@ def read_path():
             sensor_run_path_dic[sensor_name] = {}
 
         # get the run number from the path of each root file:
-        # FOR ALL THE 3D SENSORS OF TB 2017:----------------------------------------------------------
-        # run_number = rootfile.split("/")[7].replace("run000","")
-        # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:-----------------------------------------------
-        run_number = rootfile.split("/")[11].split("_")[0]
+        # FOR ALL THE 3D SENSORS OF TB 2017 and FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi:
+        if selection==1 or selection==3: run_number = rootfile.split("/")[7].replace("run000","")
+        # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:------------------------------------------
+        if selection==2 : run_number = rootfile.split("/")[11].split("_")[0]
 
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
@@ -195,16 +208,25 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
             
-            measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
+            # depending on the root files, we can take from the name the measure (TB or RS and year) or 
+            # put it in the case of Jordi's processed root files, they are ONLY TB2017 at the moment:
+            if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
+                measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
+            if sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
+                measure = "TB2017"
             
             histo.SetTitle("{0} Sensor {1} run {2} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt))
 
             # Plot and fit the range with automatic range:
-            fit_range_min = histo.GetMaximumBin()-20000
-            fit_range_max = histo.GetMaximumBin()+40000
-            histo.Fit(fun,"","",fit_range_min,fit_range_max)
-            histo.Draw()
+            if correction!=1:
+                fit_range_min = histo.GetMaximumBin()-20000
+                fit_range_max = histo.GetMaximumBin()+40000
+                histo.Fit(fun,"","",fit_range_min,fit_range_max)
+                histo.Draw()
+            else:
+                histo.Fit(fun,"","",7000,60000)
+                histo.Draw()
 
             # Add MPV value (peak)
             pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
