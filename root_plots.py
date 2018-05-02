@@ -54,8 +54,8 @@ def read_path():
 
 
     # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
-    #selection = 2
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    selection = 2
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # - Check with ONE file:
     # all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
@@ -64,15 +64,15 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR M1-5 AND N1-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
-    selection = 3
-    all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
-    all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
-    all_paths = all_paths1 + all_paths2
+    #selection = 3
+    #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
+    #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
+    #all_paths = all_paths1 + all_paths2
     # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
-    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
-/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    #if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+    #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
     # ------------------------------------------------------------------------------------------------
 
     # Instantiate the big dictionary:
@@ -207,7 +207,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             fun.SetParameter(2, 13000)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
-            
+
             # depending on the root files, we can take from the name the measure (TB or RS and year) or 
             # put it in the case of Jordi's processed root files, they are ONLY TB2017 at the moment:
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
@@ -226,6 +226,11 @@ time window < {4}".format(measure,sensor,run,mint,maxt))
                 histo.Draw()
             else:
                 histo.Fit(fun,"","",7000,60000)
+                histo.Draw()
+
+            # Decide if the fit range by hand is good or not:
+            if fun.GetChisquare()/fun.GetNDF()>2:
+                histo.Fit(fun,"","",5000,70000)
                 histo.Draw()
 
             # Add MPV value (peak)
