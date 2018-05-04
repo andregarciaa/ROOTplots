@@ -180,6 +180,9 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatH(0.20)
             gStyle.SetStatY(0.93)
 
+            # Do not take into account clusters with a high common mode value:
+            cut += " && abs(common_mode) < 100" 
+
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
             root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(200,-0.5, 80000.5)",cut)
