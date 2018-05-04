@@ -170,7 +170,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 continue
 
             # Obtain the time window and save in a list of 2 elements:
-            time_window = an.get_time_window(root_tree,"")
+            time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
