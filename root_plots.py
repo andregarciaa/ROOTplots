@@ -57,7 +57,7 @@ def read_path():
     selection = 2
     all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # - Check with ONE file:
-    # all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root']
+    #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -185,7 +185,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
-            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(200,-0.5, 60000.5)",cut)
+            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -199,7 +199,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             histo.GetYaxis().SetTitleOffset(1.6)
 
             # Construct a ROOT function from the python function for the fit:
-            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,60000.5,4)
+            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,5000,60000.5,4)
 
             # Give an initial value to the parameters of the fit function:
             # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
