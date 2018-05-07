@@ -185,7 +185,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
-            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(200,-0.5, 80000.5)",cut)
+            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(200,-0.5, 60000.5)",cut)
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -199,7 +199,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             histo.GetYaxis().SetTitleOffset(1.6)
 
             # Construct a ROOT function from the python function for the fit:
-            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,70000.5,4)
+            fun = ROOT.TF1("Landau-Gauss",an.landau_gaus,10000,60000.5,4)
 
             # Give an initial value to the parameters of the fit function:
             # MPV (Landau peak), width, area (entry number), Gauss sigma(noise)
@@ -233,7 +233,7 @@ time window < {4}".format(measure,sensor,run,mint,maxt))
 
             # Decide if the fit range by hand is good or not:
             if fun.GetChisquare()/fun.GetNDF()>2:
-                histo.Fit(fun,"","",5000,70000)
+                histo.Fit(fun,"","",5000,60000)
                 histo.Draw()
 
             # Add MPV value (peak)
