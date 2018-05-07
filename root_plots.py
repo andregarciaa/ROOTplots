@@ -181,7 +181,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatY(0.93)
 
             # Do not take into account clusters with a high common mode value:
-            cut += " && abs(common_mode) < 100" 
+            cut += " && abs(common_mode) < 20" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
