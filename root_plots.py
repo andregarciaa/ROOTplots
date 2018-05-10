@@ -53,11 +53,11 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
 
-    # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017-----------------------------------------------------
+    # FOR M1-5, N1-3 and REF OF TB AND RS 2017--------------------------------------------------------
     selection = 2
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # - Check with ONE file:
-    #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
+    all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -91,10 +91,10 @@ def read_path():
 "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
                 continue
         elif selection == 2:
-            # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:---------------------------------
+            # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
             sensor_name = rootfile.split("/")[10]
-            # In the directory there are also folders which are not of M1-5 and N1-3, ignore:
-            if sensor_name != "N1-3" and sensor_name != "M1-5":
+            # In the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
+            if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
                 continue
         elif selection ==3:
             # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
@@ -169,8 +169,9 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 print "{0} has less than 2000 events!!".format(root_file)
                 continue
 
-            # Obtain the time window and save in a list of 2 elements:
-            time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
+            # Obtain the time window with the common mode cut:
+            if sensor=="REF": time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
+            else: time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
@@ -180,8 +181,10 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatH(0.20)
             gStyle.SetStatY(0.93)
 
-            # Do not take into account clusters with a high common mode value:
-            cut += " && abs(common_mode) < 20" 
+            # Do not take into account clusters with a high common mode value 
+            # (different value for REF sensor):
+            if sensor=="REF": cut += " && abs(common_mode) < 100"
+            else: cut += " && abs(common_mode) < 20" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
@@ -219,9 +222,12 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             # put it in the case of Jordi's processed root files, they are ONLY TB2017 at the moment:
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
-            if sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
+            ifse sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
+sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
-            
+            ifse:
+                measure = "?"
+
             histo.SetTitle("{0} Sensor {1} run {2} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt))
 
