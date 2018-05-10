@@ -16,7 +16,7 @@ Script which creates a PDF file with the canvas of the calibrated charge
 distributions obtained from a path with several ROOT files. 
 Two particular cases of charge distribution of 3D sensors can be selected 
 through hardcoding: the six 3D sensors measured at May 2017 SPS Test Beam 
-or only M1-5 and N1-3 from TB and RS of 2016 and 2017 (in order to compare 
+or only M1-5, N1-3 and REF from TB and RS of 2017 (in order to compare 
 them to study excessive collected charge by M1-5).
 
 __author__ = "Andrea Garcia Alonso"
@@ -55,9 +55,9 @@ def read_path():
 
     # FOR M1-5, N1-3 and REF OF TB AND RS 2017--------------------------------------------------------
     selection = 2
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # - Check with ONE file:
-    all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
+    #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -222,14 +222,17 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             # put it in the case of Jordi's processed root files, they are ONLY TB2017 at the moment:
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
+                temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[9]
             ifse sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
+                temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[9]
             ifse:
                 measure = "?"
+                temperature = "?"
 
             histo.SetTitle("{0} Sensor {1} run {2} Calibrated charge. {3} < \
-time window < {4}".format(measure,sensor,run,mint,maxt))
+time window < {4}".format(measure,temperature,sensor,run,mint,maxt))
 
             # Plot and fit the range with automatic range:
             if correction!=1:
