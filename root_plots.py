@@ -229,7 +229,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
                 temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[9]
-            ifse:
+            else:
                 measure = "?"
                 temperature = "?"
 
