@@ -56,6 +56,8 @@ def read_path():
     # FOR M1-5, N1-3 and REF OF TB AND RS 2017--------------------------------------------------------
     selection = 2
     all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
+    # ONLY REF sensor in the PDF output:
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/REF/*beam_analysis_cluster.root')
     # - Check with ONE file:
     #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
@@ -223,7 +225,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
                 temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[9]
-            ifse sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
+            elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
                 temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[9]
