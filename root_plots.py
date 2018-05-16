@@ -54,10 +54,10 @@ def read_path():
 
 
     # FOR M1-5, N1-3 and REF OF TB AND RS 2017--------------------------------------------------------
-    selection = 2
+    #selection = 2
     #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
     # ONLY REF sensor in the PDF output:
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/REF/*beam_analysis_cluster.root')
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/REF/*beam_analysis_cluster.root')
     # - Check with ONE file:
     #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
@@ -70,6 +70,23 @@ def read_path():
     #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
     #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
     #all_paths = all_paths1 + all_paths2
+    # - example of path_with_root_file:
+    # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
+    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
+    #if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+    #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    # ------------------------------------------------------------------------------------------------
+
+    # FOR N1-7 irradiated OF TB 2017. ROOT files by Jordi---------------------------------------------
+    selection = 3
+    #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
+    #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
+    #all_paths = all_paths1 + all_paths2
+    all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000314/*beam_analysis_cluster.root')
+    all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000349/*beam_analysis_cluster.root')
+    all_pathsC = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000347/*beam_analysis_cluster.root')
+    all_pathsD = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000363/*beam_analysis_cluster.root')
+    all_paths = all_pathsA + all_pathsB + all_pathsC + all_pathsD
     # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -98,9 +115,9 @@ def read_path():
             # In the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
             if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
                 continue
-        elif selection ==3:
+        elif selection == 3:
             # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
-            sensor_name = rootfile.split("/")[6]
+            sensor_name = rootfile.split("/")[6].replace("_7e15_b2","")
 
         # If the information of the current kind of sensor hasn't been collected yet, create 
         # its own dictionary inside a new key of the big one:
@@ -135,8 +152,8 @@ def process(sensor_run_path_dic):
 
     correction = 1
 
-    # Do you want to correct the calibration or gain factor by 1.075?? (uncomment:)
-    # correction = 1.075
+    # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
+    correction = 1.085
 
     ROOT.gROOT.SetBatch()
     mpv_values = {}
@@ -228,7 +245,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
-                temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[9]
+                temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[8]
             else:
                 measure = "?"
                 temperature = "?"
