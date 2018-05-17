@@ -65,6 +65,14 @@ def read_path():
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
+    # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
+    selection = 2.5
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
+    # - example of path_with_root_file:
+    # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern
+    # 0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
+    # ------------------------------------------------------------------------------------------------
+
     # FOR M1-5 AND N1-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
     #selection = 3
     #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
@@ -78,15 +86,15 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR N1-7 irradiated OF TB 2017. ROOT files by Jordi---------------------------------------------
-    selection = 3
+    #selection = 3
     #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
     #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
     #all_paths = all_paths1 + all_paths2
-    all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000314/*beam_analysis_cluster.root')
-    all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000349/*beam_analysis_cluster.root')
-    all_pathsC = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000347/*beam_analysis_cluster.root')
-    all_pathsD = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000363/*beam_analysis_cluster.root')
-    all_paths = all_pathsA + all_pathsB + all_pathsC + all_pathsD
+    #all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000314/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000349/*beam_analysis_cluster.root')
+    #all_pathsC = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000347/*beam_analysis_cluster.root')
+    #all_pathsD = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000363/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA + all_pathsB + all_pathsC + all_pathsD
     # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -109,11 +117,11 @@ def read_path():
             if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
 "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
                 continue
-        elif selection == 2:
+        elif selection == 2 or selection == 2.5:
             # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
             sensor_name = rootfile.split("/")[10]
             # In the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
-            if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
+            if selection == 2 and sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
                 continue
         elif selection == 3:
             # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
@@ -129,7 +137,7 @@ def read_path():
         # FOR ALL THE 3D SENSORS OF TB 2017 and FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi:
         if selection==1 or selection==3: run_number = rootfile.split("/")[7].replace("run000","")
         # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:------------------------------------------
-        if selection==2 : run_number = rootfile.split("/")[11].split("_")[0]
+        if selection==2 or selection == 2.5: run_number = rootfile.split("/")[11].split("_")[0]
 
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
@@ -206,8 +214,13 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             else: cut += " && abs(common_mode) < 20" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
-            # CHANGE HERE THE VALUE OF THE CORRECTION (DIVISION) OR PUT 1 WHEN NO CORRECTION:
-            root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+            # Apply the correction factor to data if necessary:
+            if correction == 1:
+                root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+            elif correction == 1.085:
+                root_tree.Draw("cluster_calibrated_charge/1.085>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+            else:
+                print "New correction factor: value not implemented in the root_plots.py !!!!!!!!!!!!"
 
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -250,7 +263,13 @@ sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "?"
                 temperature = "?"
 
-            histo.SetTitle("{0} Sensor {1} run {2} T={5} Calibrated charge. {3} < \
+            if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5" and \
+sensor_run_path_dic[sensor][run].split("/")[9]=="resultsRS2017cern":
+                voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
+                histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
+time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
+            else:
+                histo.SetTitle("{0} Sensor {1} run {2} T={5} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
 
             # Plot and fit the range with automatic range:
