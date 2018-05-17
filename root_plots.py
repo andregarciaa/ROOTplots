@@ -159,7 +159,7 @@ def process(sensor_run_path_dic):
     """
 
 
-    # HERE! harcode this: !!!!!!
+    # HERE! hardcode this: !!!!!!
     correction = 1
 
     # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
