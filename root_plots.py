@@ -158,6 +158,8 @@ def process(sensor_run_path_dic):
                mpv_values: dictionary. MPVs of the Landau-Gauss fits
     """
 
+
+    # HERE! harcode this: !!!!!!
     correction = 1
 
     # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
