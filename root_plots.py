@@ -121,7 +121,8 @@ def read_path():
             # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
             sensor_name = rootfile.split("/")[10]
             # In the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
-            if selection == 2 and sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
+            #if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
+            if sensor_name == "N1-3" or sensor_name == "M1-5" or sensor_name == "REF":
                 continue
         elif selection == 3:
             # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
@@ -199,8 +200,13 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 continue
 
             # Obtain the time window with the common mode cut:
-            if sensor=="REF": time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
-            else: time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
+            if sensor=="REF": 
+                time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
+            elif sensor=="M1-5" or sensor=="N1-3": 
+                time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
+            else:
+                time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 40")
+
             mint = float(time_window[0])
             maxt = float(time_window[1])
             cut = "{0} < eventTime && {1} > eventTime".format(mint,maxt)
@@ -211,9 +217,10 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatY(0.93)
 
             # Do not take into account clusters with a high common mode value 
-            # (different value for REF sensor):
+            # (different value for REF sensor and irradiated or not):
             if sensor=="REF": cut += " && abs(common_mode) < 100"
-            else: cut += " && abs(common_mode) < 20" 
+            elif sensor=="M1-5" or sensor=="N1-3": cut += " && abs(common_mode) < 20"
+            else: cut += " && abs(common_mode) < 40" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             # Apply the correction factor to data if necessary:
