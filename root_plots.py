@@ -66,8 +66,8 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
-    selection = 2.5
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
+    #selection = 2.5
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
     # - example of path_with_root_file:
     # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern
     # 0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
@@ -85,21 +85,21 @@ def read_path():
     #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
     # ------------------------------------------------------------------------------------------------
 
-    # FOR N1-7 irradiated OF TB 2017. ROOT files by Jordi---------------------------------------------
-    #selection = 3
+    # 3D SENSORS FROM TB 2017. ROOT files by Jordi---------------------------------------------------
+    selection = 3
+    # Non irradiated:
     #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
     #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
     #all_paths = all_paths1 + all_paths2
-    #all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000314/*beam_analysis_cluster.root')
-    #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000349/*beam_analysis_cluster.root')
-    #all_pathsC = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000347/*beam_analysis_cluster.root')
-    #all_pathsD = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000363/*beam_analysis_cluster.root')
-    #all_paths = all_pathsA + all_pathsB + all_pathsC + all_pathsD
+    # Irradiated:
+    all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
+    all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
+    all_paths = all_pathsA + all_pathsB
     # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
-    #if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
-    #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+    /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
     # ------------------------------------------------------------------------------------------------
 
     # Instantiate the big dictionary:
@@ -125,8 +125,8 @@ def read_path():
             if sensor_name == "N1-3" or sensor_name == "M1-5" or sensor_name == "REF":
                 continue
         elif selection == 3:
-            # FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi-----------------------------
-            sensor_name = rootfile.split("/")[6].replace("_7e15_b2","")
+            # 3D SENSORS AT TB 2017 root files of Jordi-------------------------------------
+            sensor_name = rootfile.split("/")[6].split("_")[0]
 
         # If the information of the current kind of sensor hasn't been collected yet, create 
         # its own dictionary inside a new key of the big one:
@@ -165,6 +165,7 @@ def process(sensor_run_path_dic):
 
     # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
     correction = 1.085
+
 
     ROOT.gROOT.SetBatch()
     mpv_values = {}
@@ -260,7 +261,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetOptFit(1111)
 
             # depending on the root files, we can take from the name the measure (TB or RS and year) or 
-            # put it in the case of Jordi's processed root files, they are ONLY TB2017 at the moment:
+            # put it in the case of Jordi's processed root files (they are ONLY TB2017):
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
                 temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
@@ -275,6 +276,11 @@ sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5" and \
 sensor_run_path_dic[sensor][run].split("/")[9]=="resultsRS2017cern":
                 voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
+                histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
+time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
+            elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
+sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
+                voltage = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[6]
                 histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
             else:
