@@ -92,9 +92,10 @@ def read_path():
     #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
     #all_paths = all_paths1 + all_paths2
     # Irradiated:
-    all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
-    all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
-    all_paths = all_pathsA + all_pathsB
+    all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA + all_pathsB
+    #all_paths=glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000399/*beam_analysis_cluster.root')
     # - example of path_with_root_file:
     # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
     # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
@@ -201,6 +202,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 continue
 
             # Obtain the time window with the common mode cut:
+            print run
             if sensor=="REF": 
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
             elif sensor=="M1-5" or sensor=="N1-3": 
