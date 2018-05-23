@@ -168,10 +168,10 @@ def process(sensor_run_path_dic):
 
 
     # HERE! hardcode this: !!!!!!
-    correction = 1
+    # correction = 1
 
     # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
-    correction = 1.085
+    # correction = 1.085
 
 
     ROOT.gROOT.SetBatch()
@@ -232,13 +232,15 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             else: cut += " && abs(common_mode) < 40" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
+            root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+
             # Apply the correction factor to data if necessary:
-            if correction == 1:
-                root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
-            elif correction == 1.085:
-                root_tree.Draw("cluster_calibrated_charge/1.085>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
-            else:
-                print "New correction factor: value not implemented in the root_plots.py !!!!!!!!!!!!"
+            #if correction == 1:
+            #    root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+            #elif correction == 1.085:
+            #    root_tree.Draw("cluster_calibrated_charge/1.085>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
+            #else:
+            #    print "New correction factor: value not implemented in the root_plots.py !!!!!!!!!!!!"
             
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
@@ -296,15 +298,17 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
 time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
 
             # Plot and fit the range with automatic range:
-            if correction!=1:
-                fit_range_min = histo.GetMaximumBin()-20000
-                fit_range_max = histo.GetMaximumBin()+40000
-                histo.Fit(fun,"","",fit_range_min,fit_range_max)
-                histo.Draw()
-            else:
-                histo.Fit(fun,"","",7000,60000)
-                histo.Draw()
+            #if correction!=1:
+            #    fit_range_min = histo.GetMaximumBin()-20000
+            #    fit_range_max = histo.GetMaximumBin()+40000
+            #    histo.Fit(fun,"","",fit_range_min,fit_range_max)
+            #    histo.Draw()
+            #else:
+            #    histo.Fit(fun,"","",7000,60000)
+            #    histo.Draw()
 
+            histo.Fit(fun,"","",7000,60000)
+            histo.Draw()
 
             if histo.GetEntries() < 1000: continue
             # Decide if the fit range by hand is good or not:
@@ -317,12 +321,13 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
 
             # Add MPV value (peak)
             pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
-            if correction==1:  
-                pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
-                pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
-            else:
-                pt = TPaveText(.6, 0.4, 0.9, 0.48, "NDC")
-                pt.AddText("Peak: {0} ke. Correction: {1}".format("{0:.1f}".format(fun.GetParameter(0)/1000.0),correction))
+            pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            #if correction==1:  
+            #    pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
+            #    pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            #else:
+            #    pt = TPaveText(.6, 0.4, 0.9, 0.48, "NDC")
+            #    pt.AddText("Peak: {0} ke. Correction: {1}".format("{0:.1f}".format(fun.GetParameter(0)/1000.0),correction))
             pt.Draw()
 
             # Save one PDF document for all the generated plots:
