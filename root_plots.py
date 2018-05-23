@@ -115,8 +115,8 @@ def read_path():
             # FOR ALL THE 3D SENSORS OF TB 2017:--------------------------------------------
             sensor_name = rootfile.split("/")[6]
             # In the directory there are also data from iLGAD, LGAD and REF, ignore:
-            if(sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
-"iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1"):
+            if sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
+"iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1":
                 continue
         elif selection == 2 or selection == 2.5:
             # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
@@ -140,6 +140,12 @@ def read_path():
         if selection==1 or selection==3: run_number = rootfile.split("/")[7].replace("run000","")
         # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:------------------------------------------
         if selection==2 or selection == 2.5: run_number = rootfile.split("/")[11].split("_")[0]
+
+        # OMMIT Run 364 of sensor N1-7 because it produces this error:
+        #   Fit:0: RuntimeWarning: Fit data is empty
+        #   Error in <TFitResultPtr>: TFitResult is empty - use the fit option S
+        if selection==3 and sensor_name == "N1-7" and int(run_number)>363:
+            continue
 
         # Save the path of the root file for each sensor and run number:
         sensor_run_path_dic[sensor_name][run_number] = rootfile
@@ -233,7 +239,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 root_tree.Draw("cluster_calibrated_charge/1.085>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
             else:
                 print "New correction factor: value not implemented in the root_plots.py !!!!!!!!!!!!"
-
+            
             # Landau-Gauss fit
             histo = ROOT.gDirectory.Get("Landau-Gauss")
 
@@ -299,6 +305,8 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
                 histo.Fit(fun,"","",7000,60000)
                 histo.Draw()
 
+
+            if histo.GetEntries() < 1000: continue
             # Decide if the fit range by hand is good or not:
             if fun.GetChisquare()/fun.GetNDF()>2 and sensor=="REF":
                 histo.Fit(fun,"","",16000,60000)
