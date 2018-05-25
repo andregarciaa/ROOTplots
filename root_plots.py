@@ -38,70 +38,61 @@ def read_path():
     - Output: sensor_run_path_dic: dictionary relating sensor_name--run_number--full_path
     """
 
-    # FOR ALL THE 3D SENSORS OF TB 2017:---------------------------------------------------------------
+    # FOR ALL THE 3D SENSORS OF TB and RS 2016 and 2017:----------------------------------------------
     #selection = 1
-    # - list all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
-    # all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
+    # - List all "/eos/.../beam_analysis_cluster.root" file paths in the known folders of the given path:
+    #all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/*/*/*beam_analysis_cluster.root')  
     # - Due to last line is hardcoded, if list is empty, raise the following error (FOR /EOS/...):
-    # if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
-    # /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    #if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
+    #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
     # - example of path_with_root_file:
-    # /eos/user/d/duarte/alibavas_data_root
+    #   /eos/user/d/duarte/alibavas_data_root
     # - inside it, there will be:
     #   /N1-7_7e15_b2/run000391/
     #   391_2017-05-21_15-26_gerva_MBV3_N1-7_-200V_-31d2uA_-25C_lat132_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
 
-    # FOR M1-5, N1-3 and REF OF TB AND RS 2017--------------------------------------------------------
+    # FOR M1-5, N1-3 and REF OF TB 2017---------------------------------------------------------------
     #selection = 2
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/*/*beam_analysis_cluster.root')
-    # ONLY REF sensor in the PDF output:
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/*/REF/*beam_analysis_cluster.root')
+    #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/N1-3/*beam_analysis_cluster.root')
+    #all_pathsC = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/REF/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA + all_pathsB + all_pathsC
     # - Check with ONE file:
-    #all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
+    #   all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
-    # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
-    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
+    #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/
+    #   378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
-    # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
-    #selection = 2.5
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
-    # - example of path_with_root_file:
-    # /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern
-    # 0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
-    # ------------------------------------------------------------------------------------------------
-
-    # FOR M1-5 AND N1-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
+    # FOR N1-7 and M2-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
     #selection = 3
-    #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
-    #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
-    #all_paths = all_paths1 + all_paths2
+    # - Irradiated:
+    #all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA + all_pathsB
+    # - Check one file:
+    #   all_paths=glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000399/*beam_analysis_cluster.root')
+    # - Also non irradiated again, but with Jordi's root files:
+    #   all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
+    #   all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
+    #   all_paths = all_paths1 + all_paths2
     # - example of path_with_root_file:
-    # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
-    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
+    #   /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
+    #   378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
     #if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
     #/eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
     # ------------------------------------------------------------------------------------------------
 
-    # 3D SENSORS FROM TB 2017. ROOT files by Jordi---------------------------------------------------
-    selection = 3
-    # Non irradiated:
-    #all_paths1 = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/*/*beam_analysis_cluster.root')
-    #all_paths2 = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-3_0_b1/*/*beam_analysis_cluster.root')
-    #all_paths = all_paths1 + all_paths2
-    # Irradiated:
-    all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
-    #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
-    #all_paths = all_pathsA + all_pathsB
-    #all_paths=glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/run000399/*beam_analysis_cluster.root')
+    # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
+    #selection = 4
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
     # - example of path_with_root_file:
-    # /eos/user/d/duarte/alibavas_data_root/M1-5_0_b2/run000378/
-    # 378_2017-05-20_23-25_gerva_MB2_M1-5_-30V_-91d3uA_-25C_lat132_beam_analysis_cluster.root
-    if(all_paths == []): raise IOError("\033[1;35mYou are not in lxplus, so you cannot access the \
-    /eos/user/d/duarte/alibavas_data_root/ path, where the root files are looked for.\033[1;m")
+    #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern
+    #   0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
+
 
     # Instantiate the big dictionary:
     sensor_run_path_dic = {}
@@ -118,13 +109,13 @@ def read_path():
             if sensor_name == "LGAD7859W1H6_0_b1" or sensor_name == \
 "iLGAD8533W1K05T_0_b2" or sensor_name == "REF_0_b1":
                 continue
-        elif selection == 2 or selection == 2.5:
+        elif selection == 2 or selection == 4:
             # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
             sensor_name = rootfile.split("/")[10]
-            # In the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
+            # If in the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
             #if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
-            if sensor_name == "N1-3" or sensor_name == "M1-5" or sensor_name == "REF":
-                continue
+            #if sensor_name == "N1-3" or sensor_name == "M1-5" or sensor_name == "REF":
+            #    continue
         elif selection == 3:
             # 3D SENSORS AT TB 2017 root files of Jordi-------------------------------------
             sensor_name = rootfile.split("/")[6].split("_")[0]
@@ -139,7 +130,7 @@ def read_path():
         # FOR ALL THE 3D SENSORS OF TB 2017 and FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi:
         if selection==1 or selection==3: run_number = rootfile.split("/")[7].replace("run000","")
         # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:------------------------------------------
-        if selection==2 or selection == 2.5: run_number = rootfile.split("/")[11].split("_")[0]
+        if selection == 2 or selection == 4: run_number = rootfile.split("/")[11].split("_")[0]
 
         # OMMIT Run 364 of sensor N1-7 because it produces this error:
         #   Fit:0: RuntimeWarning: Fit data is empty
@@ -275,27 +266,26 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
                 temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
+
+                if measure == "TB2017cern":
+                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
+                elif measure == "RS2017cern" and (sensor == "M1-5" or sensor == "N1-3"):
+                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
+                elif measure == "RS2017cern" and (sensor == "N1-7" or sensor == "M2-3"):
+                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[7]
+
             elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
                 measure = "TB2017"
                 temperature = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[8]
+                voltage = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[6]
+
             else:
                 measure = "?"
                 temperature = "?"
 
-            if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5" and \
-sensor_run_path_dic[sensor][run].split("/")[9]=="resultsRS2017cern":
-                voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
-                histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
+            histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
 time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
-            elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
-sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
-                voltage = sensor_run_path_dic[sensor][run].split("/")[8].split("_")[6]
-                histo.SetTitle("{0} Sensor {1} run {2} T={5} V={6} Calibrated charge. {3} < \
-time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
-            else:
-                histo.SetTitle("{0} Sensor {1} run {2} T={5} Calibrated charge. {3} < \
-time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
 
             # Plot and fit the range with automatic range:
             #if correction!=1:
@@ -321,7 +311,7 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature))
 
             # Add MPV value (peak)
             pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
-            pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
+            pt.AddText("Peak: {0} #pm {1} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0), "{0:.1f}".format(0.08*fun.GetParameter(0)/1000.0)))
             #if correction==1:  
             #    pt = TPaveText(.6, 0.4, 0.78, 0.48, "NDC")
             #    pt.AddText("Peak: {0} ke".format("{0:.1f}".format(fun.GetParameter(0)/1000.0)))
