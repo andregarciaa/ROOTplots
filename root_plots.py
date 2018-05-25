@@ -88,13 +88,13 @@ def read_path():
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
     selection = 4
     # - Non Irradiated:
-    all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/*beam_analysis_cluster.root')
-    all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-3/*beam_analysis_cluster.root')
-    all_paths = all_pathsA+all_pathsB
+    #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-3/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA+all_pathsB
     # - Irradiated:
-    #all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
-    #all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
-    #all_paths = all_paths1+all_paths2
+    all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
+    all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
+    all_paths = all_paths1+all_paths2
 
     # - example of the two types of path_with_root_file for this selection:
     #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/
@@ -270,13 +270,8 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             # and year), or put it (in the case of Jordi's processed root files, which are ONLY TB2017):
             if sensor_run_path_dic[sensor][run].split("/")[8] == "TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
-
-                if measure == "TB2017cern" or (measure == "RS2017cern" and (sensor == "M1-5" or sensor == "N1-3")):
-                    temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
-                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
-                elif measure == "RS2017cern" and (sensor == "N1-7" or sensor == "M2-3"):
-                    temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[9]
-                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[7]
+                temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
+                voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
 
             elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
 sensor_run_path_dic[sensor][run].split("/")[5]=="alibavas_data_root":
