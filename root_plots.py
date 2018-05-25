@@ -303,13 +303,10 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
             if histo.GetEntries() < 1000: continue
             # Decide if the fit range by hand is good or not:
             if fun.GetChisquare()/fun.GetNDF()>2 and sensor=="REF":
-                histo.Fit(fun,"","",16000,60000)
+                histo.Fit(fun,"","",16000,40000)
                 histo.Draw()
             elif fun.GetChisquare()/fun.GetNDF()>2:
                 histo.Fit(fun,"","",5000,60000)
-                histo.Draw()
-            elif sensor == "REF":
-                histo.Fit(fun,"","",16000,40000)
                 histo.Draw()
 
             # Add MPV value (peak)
