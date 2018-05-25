@@ -86,11 +86,13 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
-    #selection = 4
-    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
-    # - example of path_with_root_file:
-    #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern
+    selection = 4
+    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
+    # - example of the two types of path_with_root_file for this selection:
+    #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/
     #   0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
+    #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/
+    #   0001_2017-05-25_00-00_MBv3_7.0e15p_N1-7_-100V_24uA_-25C_lat000_beam_analysis_cluster.root
     # ------------------------------------------------------------------------------------------------
 
 
@@ -112,10 +114,6 @@ def read_path():
         elif selection == 2 or selection == 4:
             # FOR M1-5, N1-3 and REF OF TB AND RS 2017:-------------------------------------
             sensor_name = rootfile.split("/")[10]
-            # If in the directory there are folders which are not of M1-5, N1-3 and REF, ignore:
-            #if sensor_name != "N1-3" and sensor_name != "M1-5" and sensor_name != "REF":
-            #if sensor_name == "N1-3" or sensor_name == "M1-5" or sensor_name == "REF":
-            #    continue
         elif selection == 3:
             # 3D SENSORS AT TB 2017 root files of Jordi-------------------------------------
             sensor_name = rootfile.split("/")[6].split("_")[0]
@@ -128,11 +126,11 @@ def read_path():
 
         # get the run number from the path of each root file:
         # FOR ALL THE 3D SENSORS OF TB 2017 and FOR M1-5 AND N1-3 OF TB 2017 root files of Jordi:
-        if selection==1 or selection==3: run_number = rootfile.split("/")[7].replace("run000","")
+        if selection == 1 or selection == 3: run_number = rootfile.split("/")[7].replace("run000","")
         # FOR M1-5 AND N1-3 OF TB AND RS 2016 AND 2017:------------------------------------------
         if selection == 2 or selection == 4: run_number = rootfile.split("/")[11].split("_")[0]
 
-        # OMMIT Run 364 of sensor N1-7 because it produces this error:
+        # OMIT Run 364 of sensor N1-7 because it produces this error:
         #   Fit:0: RuntimeWarning: Fit data is empty
         #   Error in <TFitResultPtr>: TFitResult is empty - use the fit option S
         if selection==3 and sensor_name == "N1-7" and int(run_number)>363:
@@ -158,9 +156,8 @@ def process(sensor_run_path_dic):
     """
 
 
-    # HERE! hardcode this: !!!!!!
+    # HERE! hardcode this, IF working with a relevant correction factor. !!!!!!
     # correction = 1
-
     # Do you want to correct the calibration or gain factor by 1.075 or 1.085?? (uncomment:)
     # correction = 1.085
 
@@ -200,11 +197,11 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
 
             # Obtain the time window with the common mode cut:
             print run
-            if sensor=="REF": 
+            if sensor == "REF": 
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
-            elif sensor=="M1-5" or sensor=="N1-3": 
+            elif sensor == "M1-5" or sensor == "N1-3": 
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
-            else:
+            elif sensor == "M2-3" or sensor == "N1-7":
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 40")
 
             mint = float(time_window[0])
@@ -217,15 +214,15 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             gStyle.SetStatY(0.93)
 
             # Do not take into account clusters with a high common mode value 
-            # (different value for REF sensor and irradiated or not):
+            # (different value for REF sensor and irradiated or not 3D sensors):
             if sensor=="REF": cut += " && abs(common_mode) < 100"
             elif sensor=="M1-5" or sensor=="N1-3": cut += " && abs(common_mode) < 20"
-            else: cut += " && abs(common_mode) < 40" 
+            elif sensor == "M2-3" or sensor == "N1-7": cut += " && abs(common_mode) < 40" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
 
-            # Apply the correction factor to data if necessary:
+            # Apply the correction factor to data IF necessary:
             #if correction == 1:
             #    root_tree.Draw("cluster_calibrated_charge/1>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
             #elif correction == 1.085:
@@ -261,17 +258,16 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             fun.SetParameter(3, 28)
             gStyle.SetOptFit(1111)
 
-            # depending on the root files, we can take from the name the measure (TB or RS and year) or 
-            # put it in the case of Jordi's processed root files (they are ONLY TB2017):
-            if sensor_run_path_dic[sensor][run].split("/")[8]=="TB-RS_problem_M1-5": 
+            # depending on the root files, we can take from the name the kind of measurement (TB or RS
+            # and year), or put it (in the case of Jordi's processed root files, which are ONLY TB2017):
+            if sensor_run_path_dic[sensor][run].split("/")[8] == "TB-RS_problem_M1-5": 
                 measure = sensor_run_path_dic[sensor][run].split("/")[9].replace("results","")
-                temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
 
-                if measure == "TB2017cern":
-                    voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
-                elif measure == "RS2017cern" and (sensor == "M1-5" or sensor == "N1-3"):
+                if measure == "TB2017cern" or (measure == "RS2017cern" and (sensor == "M1-5" or sensor == "N1-3")):
+                    temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[8]
                     voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[6]
                 elif measure == "RS2017cern" and (sensor == "N1-7" or sensor == "M2-3"):
+                    temperature = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[9]
                     voltage = sensor_run_path_dic[sensor][run].split("/")[11].split("_")[7]
 
             elif sensor_run_path_dic[sensor][run].split("/")[4]=="duarte" and \
@@ -300,6 +296,7 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
             histo.Fit(fun,"","",7000,60000)
             histo.Draw()
 
+            # Omit plots with too low number of entries:
             if histo.GetEntries() < 1000: continue
             # Decide if the fit range by hand is good or not:
             if fun.GetChisquare()/fun.GetNDF()>2 and sensor=="REF":
