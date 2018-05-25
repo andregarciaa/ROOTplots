@@ -54,11 +54,11 @@ def read_path():
 
 
     # FOR M1-5, N1-3 and REF OF TB 2017---------------------------------------------------------------
-    #selection = 2
-    #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/*beam_analysis_cluster.root')
-    #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/N1-3/*beam_analysis_cluster.root')
-    #all_pathsC = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/REF/*beam_analysis_cluster.root')
-    #all_paths = all_pathsA + all_pathsB + all_pathsC
+    selection = 2
+    all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/*beam_analysis_cluster.root')
+    all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/N1-3/*beam_analysis_cluster.root')
+    all_pathsC = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/REF/*beam_analysis_cluster.root')
+    all_paths = all_pathsA + all_pathsB + all_pathsC
     # - Check with ONE file:
     #   all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
@@ -86,15 +86,15 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
-    selection = 4
+    #selection = 4
     # - Non Irradiated:
     #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/*beam_analysis_cluster.root')
     #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-3/*beam_analysis_cluster.root')
     #all_paths = all_pathsA+all_pathsB
     # - Irradiated:
-    all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
-    all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
-    all_paths = all_paths1+all_paths2
+    #all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
+    #all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
+    #all_paths = all_paths1+all_paths2
 
     # - example of the two types of path_with_root_file for this selection:
     #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/
@@ -307,6 +307,9 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
                 histo.Draw()
             elif fun.GetChisquare()/fun.GetNDF()>2:
                 histo.Fit(fun,"","",5000,60000)
+                histo.Draw()
+            elif sensor == "REF":
+                histo.Fit(fun,"","",16000,40000)
                 histo.Draw()
 
             # Add MPV value (peak)
