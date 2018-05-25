@@ -87,7 +87,15 @@ def read_path():
 
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
     selection = 4
-    all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/*/*beam_analysis_cluster.root')
+    # - Non Irradiated:
+    all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/*beam_analysis_cluster.root')
+    all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-3/*beam_analysis_cluster.root')
+    all_paths = all_pathsA+all_pathsB
+    # - Irradiated:
+    #all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
+    #all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
+    #all_paths = all_paths1+all_paths2
+
     # - example of the two types of path_with_root_file for this selection:
     #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/
     #   0001_2017-05-25_00-00_MBv3_1.72e16p_M2-3_-100V_124uA_-25C_lat000_beam_analysis_cluster.root
