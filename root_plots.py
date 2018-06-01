@@ -54,11 +54,11 @@ def read_path():
 
 
     # FOR M1-5, N1-3 and REF OF TB 2017---------------------------------------------------------------
-    selection = 2
-    all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/*beam_analysis_cluster.root')
-    all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/N1-3/*beam_analysis_cluster.root')
-    all_pathsC = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/REF/*beam_analysis_cluster.root')
-    all_paths = all_pathsA + all_pathsB + all_pathsC
+    #selection = 2
+    #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/*beam_analysis_cluster.root')
+    #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/N1-3/*beam_analysis_cluster.root')
+    #all_pathsC = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/REF/*beam_analysis_cluster.root')
+    #all_paths = all_pathsA + all_pathsB + all_pathsC
     # - Check with ONE file:
     #   all_paths = ['/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsTB2017cern/M1-5/379_2017-05-21_00-20_gerva_MB2_M1-5_-30V_-92d8uA_-25C_lat132_beam_analysis_cluster.root']
     # - example of path_with_root_file:
@@ -68,6 +68,10 @@ def read_path():
 
     # FOR N1-7 and M2-3 OF TB 2017. ROOT files by Jordi-----------------------------------------------
     #selection = 3
+    # - Irradiated N1-8:
+    #all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-8_1e16_b1/*/*beam_analysis_cluster.root')
+    # - Irradiated M1-8:
+    #all_paths = glob.glob('/eos/user/d/duarte/alibavas_data_root/M1-8_7e15_b2/*/*beam_analysis_cluster.root')
     # - Irradiated:
     #all_pathsA = glob.glob('/eos/user/d/duarte/alibavas_data_root/N1-7_7e15_b2/*/*beam_analysis_cluster.root')
     #all_pathsB = glob.glob('/eos/user/d/duarte/alibavas_data_root/M2-3_1e16_b2/*/*beam_analysis_cluster.root')
@@ -86,15 +90,17 @@ def read_path():
     # ------------------------------------------------------------------------------------------------
 
     # FOR ALL THE 3D SENSORS OF RS 2017:---------------------------------------------------------------
-    #selection = 4
+    selection = 4
     # - Non Irradiated:
     #all_pathsA = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/*beam_analysis_cluster.root')
     #all_pathsB = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-3/*beam_analysis_cluster.root')
     #all_paths = all_pathsA+all_pathsB
     # - Irradiated:
-    #all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
-    #all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
-    #all_paths = all_paths1+all_paths2
+    all_paths1 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M2-3/*beam_analysis_cluster.root')
+    all_paths2 = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-7/*beam_analysis_cluster.root')
+    all_paths = all_paths1+all_paths2
+    # Irradiated N1-8:
+    #all_paths = glob.glob('/afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/N1-8/*beam_analysis_cluster.root')
 
     # - example of the two types of path_with_root_file for this selection:
     #   /afs/cern.ch/user/a/agarciaa/workspace/private/TB-RS_problem_M1-5/resultsRS2017cern/M1-5/
@@ -209,7 +215,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 100")
             elif sensor == "M1-5" or sensor == "N1-3": 
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 20")
-            elif sensor == "M2-3" or sensor == "N1-7":
+            elif sensor == "M2-3" or sensor == "N1-7" or sensor == "N1-8" or sensor == "M1-8":
                 time_window = an.get_time_window(root_tree,"eventMasked == 0 && abs(common_mode) < 40")
 
             mint = float(time_window[0])
@@ -225,7 +231,7 @@ the alibava_clusters tree of sensor {0} at run {1}".format(sensor, run)
             # (different value for REF sensor and irradiated or not 3D sensors):
             if sensor=="REF": cut += " && abs(common_mode) < 100"
             elif sensor=="M1-5" or sensor=="N1-3": cut += " && abs(common_mode) < 20"
-            elif sensor == "M2-3" or sensor == "N1-7": cut += " && abs(common_mode) < 40" 
+            elif sensor == "M2-3" or sensor == "N1-7" or sensor == "N1-8" or sensor == "M1-8": cut += " && abs(common_mode) < 40" 
 
             # Plot the calibrated charge distribution (branch), applying the time cuts:
             root_tree.Draw("cluster_calibrated_charge>>Landau-Gauss(100,-0.5, 60000.5)",cut,"PE")
@@ -304,6 +310,15 @@ time window < {4}".format(measure,sensor,run,mint,maxt,temperature,voltage))
             # Decide if the fit range by hand is good or not:
             if fun.GetChisquare()/fun.GetNDF()>2 and sensor=="REF":
                 histo.Fit(fun,"","",16000,40000)
+                histo.Draw()
+            elif fun.GetChisquare()/fun.GetNDF()>2 and sensor == "M2-3" and run=="0004":
+                histo.Fit(fun,"","",9500,60000)
+                histo.Draw()
+            elif fun.GetChisquare()/fun.GetNDF()>2 and sensor == "M2-3" and run != "0004":
+                histo.Fit(fun,"","",8000,60000)
+                histo.Draw()
+            elif fun.GetChisquare()/fun.GetNDF()>2 and sensor == "N1-8":
+                histo.Fit(fun,"","",7500,40000)
                 histo.Draw()
             elif fun.GetChisquare()/fun.GetNDF()>2:
                 histo.Fit(fun,"","",5000,60000)
